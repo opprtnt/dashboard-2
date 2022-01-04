@@ -29,6 +29,7 @@ export default function Password() {
 
   return (
     <OutlinedInput
+      fullWidth
       id="outlined-adornment-password"
       type={values.showPassword ? 'text' : 'password'}
       value={values.password}

@@ -1,3 +1,13 @@
+import { Outlet } from 'react-router-dom';
+import HeaderAccount from '../components/HeaderAccount';
+import NavPanel from '../components/NavPanel';
+
 export default function Dashboard() {
-  return <h1>Lol</h1>;
+  return (
+    <div>
+      <NavPanel></NavPanel>
+      <HeaderAccount></HeaderAccount>
+      <Outlet></Outlet>
+    </div>
+  );
 }

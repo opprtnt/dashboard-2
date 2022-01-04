@@ -1,0 +1,15 @@
+.login{
+  width: 380px;
+  margin: auto;
+  text-align: center;
+  padding: 40px 32px;
+  .form{
+    text-align: left;
+  }
+  &__title-block{
+    margin-bottom: 48px;
+  }
+  &__header{
+    margin-bottom: 32px;
+  }
+}

@@ -7,6 +7,8 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 import { createContext } from 'react';
+import { Provider } from 'react-redux';
+import store from './store/index';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB5wRSoNDFoW6OGPm-90m-9_yrJDShFLWw',
@@ -20,7 +22,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 const auth = getAuth();
 //const firestore = app.firestore();
@@ -35,12 +36,14 @@ ReactDOM.render(
       // firestore,
     }}
   >
-    <React.StrictMode>
-      <BrowserRouter>
-        {' '}
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+    <Provider store={store}>
+      <React.StrictMode>
+        <BrowserRouter>
+          {' '}
+          <App />
+        </BrowserRouter>
+      </React.StrictMode>{' '}
+    </Provider>
   </ContextLogin.Provider>,
   document.getElementById('root')
 );
