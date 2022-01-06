@@ -1,16 +1,16 @@
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Select, MenuItem } from '@mui/material';
 import { useState } from 'react';
-//import { useCollectionData } from 'react-firebase-hooks';
-import { collection, getFirestore } from 'firebase/firestore';
-import { doc, addDoc } from 'firebase/firestore';
+import { collection, getFirestore, serverTimestamp } from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useContext } from 'react';
 import { ContextLogin } from '../index';
+import { useNavigate } from 'react-router-dom';
 
-export default function TicketForm() {
+function TicketForm() {
   const [priority, setPriority] = useState('');
-  //const [tickets, loading] = useCollectionData();
+  let navigate = useNavigate();
   const db = getFirestore();
   const { auth } = useContext(ContextLogin);
   const [user] = useAuthState(auth);
@@ -19,22 +19,28 @@ export default function TicketForm() {
     setPriority(event.target.value);
   };
   const { control, handleSubmit } = useForm();
-  const sendTicket = (data) => {
-    console.log(data, db);
-    // const postListRef = doc(db, 'tickets');
-    //const newPostRef = push(postListRef);
-    addDoc(collection(db, 'tickets'), {
-      user: 'lol',
-      ticket: 'kek',
-      priority: 'Low',
+  const sendTicket = async (data) => {
+    const docRef = await addDoc(collection(db, 'tickets'), {
+      user: {
+        uid: user.uid,
+        displayName: user.displayName,
+        photo: user.photoURL,
+      },
+      title: data.title,
+      ticket: data.description,
+      priority: data.priority,
+      date: serverTimestamp(),
+      completed: false,
     });
+
+    navigate(`/tickets/${docRef.id}`);
   };
   return (
     <div>
       <form onSubmit={handleSubmit(sendTicket)}>
         <Controller
           control={control}
-          rules={{ required: 'Обязательное поле!', maxLength: 100 }}
+          rules={{ required: 'Обязательное поле!', maxLength: 50 }}
           name="title"
           render={({ field }) => {
             return <TextField {...field} margin="normal" fullWidth />;
@@ -64,9 +70,12 @@ export default function TicketForm() {
             return <TextField {...field} margin="normal" fullWidth />;
           }}
         />
-        <input type="submit" />
+        <button type="submit">Save</button>
         <p>{user.displayName}</p>
       </form>
     </div>
   );
 }
+TicketForm.propTypes = {};
+
+export default TicketForm;

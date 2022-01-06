@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Auth from './hoc/Auth';
 import TicketsPage from './pages/TicketsPage';
 import NewTicketPage from './pages/NewTicketPage';
+import { TicketPage } from './pages/TicketPage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB5wRSoNDFoW6OGPm-90m-9_yrJDShFLWw',
@@ -46,7 +47,9 @@ function App() {
             </Auth>
           }
         />
+
         <Route path="tickets/new" element={<NewTicketPage />} />
+        <Route path="tickets/:id" element={<TicketPage />} />
       </Routes>
     </div>
   );

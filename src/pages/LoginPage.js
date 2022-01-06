@@ -26,7 +26,6 @@ export default function LoginPage() {
   const { auth } = useContext(ContextLogin);
 
   const login = async (e) => {
-    console.log(55);
     e.preventDefault();
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(auth, provider);
@@ -35,16 +34,15 @@ export default function LoginPage() {
   };
 
   const click = async (e) => {
-    console.log(55);
     e.preventDefault();
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(auth, provider);
     const UserObj = JSON.parse(JSON.stringify(user));
     dispatch(initCurrentUser(UserObj));
+    localStorage.setItem('currentUser', user.uid.toString());
+    let lol = localStorage.getItem('currentUser');
+    console.log(lol);
   };
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   return (
     <div className="login">
@@ -99,20 +97,6 @@ export default function LoginPage() {
           }}
         />
         <SubmitButton onClick={login}></SubmitButton>
-
-        {/* <ErrorMessage
-          errors={errors}
-          name="login"
-          render={({ messages }) => {
-            return messages
-              ? Object.entries(messages).map(([type, message]) => (
-                  <p className="form__error-block" key={type}>
-                    {message}
-                  </p>
-                ))
-              : null;
-          }} */}
-        {/* /> */}
       </form>
       <button onClick={click}>click me</button>
     </div>
