@@ -1,12 +1,10 @@
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Loader from '../components/Loader';
 import TotalBar from '../components/TotalBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTitlePage } from '../store/authSlice';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { ContextLogin } from '../';
 
 export default function Dashboard() {
   const DashboardCard = styled.div`
@@ -31,8 +29,7 @@ export default function Dashboard() {
       margin-left: 30px;
     }
   `;
-  const { auth } = useContext(ContextLogin);
-  const [user] = useAuthState(auth);
+  const user = useSelector((state) => state.user.userData);
   const [countHight, setCountHight] = useState();
   const [countNormal, setCountNormal] = useState();
   const [countLow, setCountLow] = useState();
@@ -51,10 +48,12 @@ export default function Dashboard() {
   const totalUncompletedUserPrecent = Math.round(
     (countAllUser / 100) * (countNormalUser + countLowUser + countHighUser) * 100
   );
+  const componentMounted = useRef(true);
   let queryHighUser, queryNormalUser, queryLowUser, queryAllTicketUser;
-
   useEffect(() => {
     if (user) {
+      console.log(1);
+
       queryHighUser = query(
         docRef,
         where('priority', '==', 2),
@@ -78,28 +77,26 @@ export default function Dashboard() {
   }, [user]);
 
   useEffect(async () => {
-    const docSnap = await getDocs(queryHigh);
-    setCountHight(docSnap.docs.length);
-    console.log(user);
-  }, []);
-  useEffect(async () => {
-    const docSnap = await getDocs(queryNormal);
-    setCountNormal(docSnap.docs.length);
-  }, []);
-  useEffect(async () => {
-    const docSnap = await getDocs(queryLow);
-    setCountLow(docSnap.docs.length);
-    const allTicketSnap = await getDocs(queryAllTicket);
-    setCountAll(allTicketSnap.docs.length);
-    const highUserSnap = await getDocs(queryHighUser);
-    setCountHighUser(highUserSnap.docs.length);
-    const normalUserSnap = await getDocs(queryNormalUser);
-    setCountNormalUser(normalUserSnap.docs.length);
-    const lowUserSnap = await getDocs(queryLowUser);
-    setCountLowUser(lowUserSnap.docs.length);
-    const allTicketUserSnap = await getDocs(queryAllTicketUser);
-    setCountAllUser(allTicketUserSnap.docs.length);
-  }, []);
+    if (user && componentMounted.current) {
+      const docSnapQueryHigh = await getDocs(queryHigh);
+      setCountHight(docSnapQueryHigh.docs.length);
+      const docSnapQueryNormal = await getDocs(queryNormal);
+      setCountNormal(docSnapQueryNormal.docs.length);
+      const docSnap = await getDocs(queryLow);
+      setCountLow(docSnap.docs.length);
+      const allTicketSnap = await getDocs(queryAllTicket);
+      setCountAll(allTicketSnap.docs.length);
+      const highUserSnap = await getDocs(queryHighUser);
+      setCountHighUser(highUserSnap.docs.length);
+      const normalUserSnap = await getDocs(queryNormalUser);
+      setCountNormalUser(normalUserSnap.docs.length);
+      const lowUserSnap = await getDocs(queryLowUser);
+      setCountLowUser(lowUserSnap.docs.length);
+      const allTicketUserSnap = await getDocs(queryAllTicketUser);
+      setCountAllUser(allTicketUserSnap.docs.length);
+    }
+    return () => (componentMounted.current = false);
+  }, [user]);
 
   const dispatch = useDispatch();
   dispatch(setTitlePage('Dashboard'));
@@ -108,8 +105,9 @@ export default function Dashboard() {
     (countHight && countLow && countNormal && countHighUser && countNormalUser) === undefined ||
     isNaN(totalUncompletedPrecent) ||
     isNaN(totalUncompletedUserPrecent)
-  )
+  ) {
     return <Loader />;
+  }
   return (
     <div className="container">
       <div className="container__content">

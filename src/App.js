@@ -12,10 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { collection, getDocs, getFirestore, limit, orderBy, query } from 'firebase/firestore';
 import { useContext, useEffect } from 'react';
-import { changeFilter, initCurrentUser, setData, setUserAuth } from './store/authSlice';
+import { changeFilter, initAuth, initCurrentUser, setData, setUserAuth } from './store/authSlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ContextLogin } from './index';
-import Loader from './components/Loader';
 
 function App() {
   const theme = useSelector((state) => state.user.themeDark);
@@ -24,7 +23,7 @@ function App() {
   const docRef = collection(db, 'tickets');
   const q = query(docRef, orderBy('date', 'desc'), limit(100));
   const { auth } = useContext(ContextLogin);
-  const user = useSelector((state) => state.user.userData);
+  const [user] = useAuthState(auth);
   const themeDark = createTheme({
     palette: {
       mode: theme ? 'dark' : 'light',
@@ -74,13 +73,12 @@ function App() {
     });
     dispatch(setData(arr));
     dispatch(changeFilter(arr));
-    dispatch(setUserAuth());
   }, [user, dispatch]);
 
   useEffect(() => {
     if (user) dispatch(initCurrentUser(JSON.parse(JSON.stringify(user))));
     console.log(user);
-  }, [dispatch]);
+  }, [user]);
 
   //if (user === null) return <Loader />;
 
@@ -109,8 +107,22 @@ function App() {
               }
             />
 
-            <Route path="new" element={<NewTicketPage />} />
-            <Route path=":id" element={<TicketPage />} />
+            <Route
+              path="new"
+              element={
+                <Auth>
+                  <NewTicketPage />
+                </Auth>
+              }
+            />
+            <Route
+              path=":id"
+              element={
+                <Auth>
+                  <TicketPage />
+                </Auth>
+              }
+            />
           </Route>
         </Routes>
       </App>

@@ -20,12 +20,10 @@ function TicketPage() {
   let navigate = useNavigate();
   const db = getFirestore();
   const docRef = doc(db, 'tickets', id);
-  const { auth } = useContext(ContextLogin);
-  const [user] = useAuthState(auth);
   const [data, setData] = useState({ title: '' });
   const [isUser, setIsUser] = useState(false);
   const [status, setStatus] = useState();
-  const user1 = useSelector((state) => state.user.userData);
+  const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   dispatch(setTitlePage(data.title));
 

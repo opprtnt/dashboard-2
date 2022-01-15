@@ -28,6 +28,7 @@ export default function SubmitButton() {
     const { user } = await signInWithPopup(auth, provider);
     const UserObj = JSON.parse(JSON.stringify(user));
     dispatch(initCurrentUser(UserObj));
+    localStorage.setItem('currentUser', UserObj);
     navigate('dashboard');
   };
 
