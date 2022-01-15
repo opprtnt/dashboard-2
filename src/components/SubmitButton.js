@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { ContextLogin } from '../index';
+import { useContext } from 'react';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { initCurrentUser } from '../store/authSlice';
 
 export default function SubmitButton() {
   const SubmitButton = styled.button`
@@ -14,9 +19,17 @@ export default function SubmitButton() {
     box-shadow: 0px 4px 12px rgba(55, 81, 255, 0.24);
     margin-top: 24px;
   `;
-  return (
-    <SubmitButton>
-      <Link to={'/dashboard'}>Log In</Link>
-    </SubmitButton>
-  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { auth } = useContext(ContextLogin);
+  const click = async (e) => {
+    e.preventDefault();
+    const provider = new GoogleAuthProvider();
+    const { user } = await signInWithPopup(auth, provider);
+    const UserObj = JSON.parse(JSON.stringify(user));
+    dispatch(initCurrentUser(UserObj));
+    navigate('dashboard');
+  };
+
+  return <SubmitButton onClick={click}>Login with Google</SubmitButton>;
 }

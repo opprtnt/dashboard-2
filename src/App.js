@@ -1,57 +1,120 @@
 import './scss/App.scss';
 import { Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import { getAuth } from 'firebase/auth';
 import Dashboard from './pages/Dashboard';
 import Auth from './hoc/Auth';
 import TicketsPage from './pages/TicketsPage';
 import NewTicketPage from './pages/NewTicketPage';
 import { TicketPage } from './pages/TicketPage';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyB5wRSoNDFoW6OGPm-90m-9_yrJDShFLWw',
-  authDomain: 'login-dashboard-47d11.firebaseapp.com',
-  projectId: 'login-dashboard-47d11',
-  storageBucket: 'login-dashboard-47d11.appspot.com',
-  messagingSenderId: '159694511820',
-  appId: '1:159694511820:web:ad2f61045357ebae39ec69',
-  measurementId: 'G-SZPPS63QSG',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-const auth = getAuth();
+import Layout from './components/Layout';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { collection, getDocs, getFirestore, limit, orderBy, query } from 'firebase/firestore';
+import { useContext, useEffect } from 'react';
+import { changeFilter, initCurrentUser, setData, setUserAuth } from './store/authSlice';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { ContextLogin } from './index';
+import Loader from './components/Loader';
 
 function App() {
-  return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route
-          path="dashboard"
-          element={
-            <Auth>
-              <Dashboard />
-            </Auth>
-          }
-        />
-        <Route
-          path="tickets"
-          element={
-            <Auth>
-              <TicketsPage />
-            </Auth>
-          }
-        />
+  const theme = useSelector((state) => state.user.themeDark);
+  const dispatch = useDispatch();
+  const db = getFirestore();
+  const docRef = collection(db, 'tickets');
+  const q = query(docRef, orderBy('date', 'desc'), limit(100));
+  const { auth } = useContext(ContextLogin);
+  const user = useSelector((state) => state.user.userData);
+  const themeDark = createTheme({
+    palette: {
+      mode: theme ? 'dark' : 'light',
+    },
+    typography: {
+      allVariants: {
+        fontFamily: 'Inter',
+      },
+    },
+  });
+  const App = styled.div`
+    color: ${theme ? 'white' : '#252733'};
+    background-color: ${theme ? '#252733' : '#f7f8fc'};
+    min-height: 100vh;
+    .gray {
+      color: ${theme ? 'white' : '#9FA2B4'};
+    }
+    .white {
+      background-color: ${theme ? '#7A7E99' : 'white'};
+      border: 1px solid ${theme ? '#0C0F21' : '#DFE0EB'};
+    }
+    text {
+      fill: ${theme ? 'white' : '#9FA2B4'};
+    }
 
-        <Route path="tickets/new" element={<NewTicketPage />} />
-        <Route path="tickets/:id" element={<TicketPage />} />
-      </Routes>
-    </div>
+    .primary {
+      background-color: ${theme ? '#8AB7F6' : '#2F80ED'};
+    }
+    .text-color {
+      color: ${theme ? 'white' : '#252733'};
+      .Mui-disabled,
+      .MuiSelect-icon {
+        color: ${theme ? '#bdbdbd' : false};
+      }
+    }
+    .ticket-card {
+      background-color: ${theme ? '#9598ad' : false};
+    }
+  `;
+
+  useEffect(async () => {
+    let arr = [];
+    const docSnap = await getDocs(q);
+    docSnap.forEach((doc) => {
+      doc.data().date = doc.data().date.seconds;
+      arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
+    });
+    dispatch(setData(arr));
+    dispatch(changeFilter(arr));
+    dispatch(setUserAuth());
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    if (user) dispatch(initCurrentUser(JSON.parse(JSON.stringify(user))));
+    console.log(user);
+  }, [dispatch]);
+
+  //if (user === null) return <Loader />;
+
+  return (
+    <ThemeProvider theme={themeDark}>
+      <App className="App">
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="dashboard" element={<Layout />}>
+            <Route
+              index
+              element={
+                <Auth>
+                  <Dashboard />
+                </Auth>
+              }
+            />
+          </Route>
+          <Route path="tickets" element={<Layout />}>
+            <Route
+              index
+              element={
+                <Auth>
+                  <TicketsPage />
+                </Auth>
+              }
+            />
+
+            <Route path="new" element={<NewTicketPage />} />
+            <Route path=":id" element={<TicketPage />} />
+          </Route>
+        </Routes>
+      </App>
+    </ThemeProvider>
   );
 }
 

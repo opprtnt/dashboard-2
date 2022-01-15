@@ -1,9 +1,21 @@
-.account{
-  margin-left: 300px;
+.header{
+  display: flex;
+  align-items: center;
+  height: 40px;
   &__avatar{
     img
     {height: 44px;
     width: 44px;
     border-radius: 100%;}
+    
   }
 }
+.account{
+  display: flex;
+  align-items: center;
+  &__name{
+    margin: 0 14px 0 32px;
+    font-weight: 600;
+  }
+}
+

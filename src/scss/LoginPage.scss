@@ -1,8 +1,32 @@
+$grayscale:#9FA2B4;
+$accent:#3751FF;
+
+.align-center-block{
+  width: 100vw;
+  height: 100vh;
+display: flex;
+background-color: #363740;
+align-items: center;
+
+}
+
 .login{
+
   width: 380px;
   margin: auto;
   text-align: center;
   padding: 40px 32px;
+  border-radius: 8px;
+  &__title{
+    margin-bottom: 12px;
+  }
+  &__logo{
+    margin-bottom: 12px;
+  }
+  &__subtitle{
+    color:$grayscale ;
+
+  }
   .form{
     text-align: left;
   }
@@ -11,5 +35,20 @@
   }
   &__header{
     margin-bottom: 32px;
+  }
+  label{
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $grayscale;
+
+  }
+  &__sign-up{
+    margin-top: 32px;
+    color:$grayscale;
+    a{
+      margin-left: 5px;
+      color:$accent;
+      font-weight: 600;
+    }
   }
 }

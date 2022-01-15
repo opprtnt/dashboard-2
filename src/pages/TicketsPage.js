@@ -1,12 +1,19 @@
-import { Link } from 'react-router-dom';
+import TableDashboard from '../components/Table';
+import { query, orderBy, limit, getFirestore, collection, getDocs } from 'firebase/firestore';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { changeFilter, setData, setTitlePage } from '../store/authSlice';
 
 export default function TicketsPage() {
+  const dispatch = useDispatch();
+  dispatch(setTitlePage('Tickets'));
+
   return (
-    <div>
-      <h1>Hello</h1>
-      <button>
-        <Link to={'new'}>New ticket</Link>
-      </button>
+    <div className="container">
+      <div className="container__content">
+        {' '}
+        <TableDashboard />
+      </div>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 import { createContext } from 'react';
 import { Provider } from 'react-redux';
@@ -20,11 +19,9 @@ const firebaseConfig = {
   measurementId: 'G-SZPPS63QSG',
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
-//const firestore = app.firestore();
 
 export const ContextLogin = createContext(null);
 
@@ -33,7 +30,6 @@ ReactDOM.render(
     value={{
       app,
       auth,
-      // firestore,
     }}
   >
     <Provider store={store}>

@@ -1,7 +1,27 @@
+@use './colors';
+@import './fonts.scss';
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: content-box;
+}
+body{
+  font-family: 'Mulish', sans-serif;
+  font-size: 14px;
+  overflow-x: hidden;
+  @media (max-width: 900px) {
+    overflow-x: scroll;
+  }
+  
+}
+h1{
+  font-size: 24px;
+  font-weight: 700;
+}
+h3{
+  font-size: 19px;
+  font-weight: 700;
 }
 a{
   text-decoration: none;
@@ -13,7 +33,7 @@ a{
   display: inline-block;
   width: 80px;
   height: 80px;
-  margin: calc(50vh - 40px) calc(50vw - 40px);
+  margin: calc(50vh - 80px) calc(50vw - 40px) calc(50vh - 40px) calc(50vw + 127px - 40px);
 }
 .lds-dual-ring:after {
   content: " ";
@@ -34,3 +54,48 @@ a{
     transform: rotate(360deg);
   }
 }
+.container{
+  margin-left: 255px;
+  padding: 30px;
+  
+  &__content{
+    max-width: 1122px;
+    margin: auto;
+  }
+  @media (max-width: 1280px) {
+    margin-left: 76px;
+  }
+  
+}
+#root{
+  min-width: 900px;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  
+}
+
+.btn-primary{
+  background: #2F80ED;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 20px;
+    line-height: 24px;
+    border-radius: 8px;
+    border: none;
+    display: block;
+    cursor: pointer;
+}
+
+button{
+  cursor: pointer;
+  a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+}
+

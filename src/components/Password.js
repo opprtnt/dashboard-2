@@ -35,6 +35,7 @@ export default function Password() {
       value={values.password}
       onChange={handleChange('password')}
       placeholder="Password"
+      sx={{ margin: '6px 0 24px' }}
       endAdornment={
         <InputAdornment position="end">
           <IconButton
