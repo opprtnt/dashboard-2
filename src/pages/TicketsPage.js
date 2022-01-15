@@ -1,4 +1,4 @@
-import TableDashboard from '../components/Table';
+import TableDashboard from '../components/TableDashboard';
 import { query, orderBy, limit, getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
