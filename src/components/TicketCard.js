@@ -15,6 +15,7 @@ function TicketCard({ ticketData }) {
     margin: 0px 10px 10px 0;
     width: 19.9%;
     padding: 16px 22px;
+    background-color: ${ticketData.completed ? (theme ? '#6D838D' : '#EBFFE5') : 'white'};
 
     &:nth-of-type(4n) {
       margin-right: 0;

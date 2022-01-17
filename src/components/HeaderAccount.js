@@ -1,17 +1,14 @@
 import '../scss/HeaderAccount.scss';
 import SearchTicket from './SearchTicket';
 import { Avatar } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { ContextLogin } from '../index';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import ThemeButtons from './ThemeButtons';
 
 export default function HeaderAccount() {
-  const { auth } = useContext(ContextLogin);
-  const [user] = useAuthState(auth);
+  const user = useSelector((state) => state.user.userData);
   const [userName, setSet] = useState();
   const [userAvatar, setAvatar] = useState();
   const location = useLocation();
@@ -23,7 +20,7 @@ export default function HeaderAccount() {
       setSet(user.displayName);
       setAvatar(user.photoURL);
     }
-  });
+  }, [user]);
 
   const HeaderAccount = styled.header`
     display: flex;

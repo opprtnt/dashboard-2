@@ -5,11 +5,7 @@ import SubmitButton from '../components/SubmitButton';
 import '../scss/LoginPage.scss';
 
 export default function LoginPage() {
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
+  const { control } = useForm({
     criteriaMode: 'all',
   });
 
@@ -77,7 +73,7 @@ export default function LoginPage() {
           <SubmitButton />
         </form>{' '}
         <p className="login__sign-up">
-          Don`t have an account?<a href="#">Sign up</a>
+          Don`t have an account?<a href="javascript:void(0)">Sign up</a>
         </p>
       </div>
     </div>

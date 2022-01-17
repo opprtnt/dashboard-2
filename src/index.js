@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { createContext } from 'react';
 import { Provider } from 'react-redux';
 import store from './store/index';

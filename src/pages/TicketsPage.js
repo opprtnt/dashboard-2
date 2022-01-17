@@ -1,12 +1,12 @@
 import TableDashboard from '../components/TableDashboard';
-import { query, orderBy, limit, getFirestore, collection, getDocs } from 'firebase/firestore';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { changeFilter, setData, setTitlePage } from '../store/authSlice';
+import { setTitlePage } from '../store/appSlice';
+import { useEffect } from 'react';
 
 export default function TicketsPage() {
   const dispatch = useDispatch();
-  dispatch(setTitlePage('Tickets'));
+
+  useEffect(() => dispatch(setTitlePage('Tickets')));
 
   return (
     <div className="container">

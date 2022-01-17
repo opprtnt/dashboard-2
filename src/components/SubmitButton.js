@@ -4,7 +4,7 @@ import { ContextLogin } from '../index';
 import { useContext } from 'react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { initCurrentUser } from '../store/authSlice';
+import { initCurrentUser } from '../store/appSlice';
 
 export default function SubmitButton() {
   const SubmitButton = styled.button`

@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import TicketForm from '../components/TicketForm';
-import { setTitlePage } from '../store/authSlice';
+import { setTitlePage } from '../store/appSlice';
 
 export default function NewTicketPage() {
   const dispatch = useDispatch();
-  dispatch(setTitlePage('Create new ticket'));
+
   const NewTicketForm = styled.div`
     padding: 32px;
     border-radius: 8px;
@@ -13,6 +14,8 @@ export default function NewTicketPage() {
       margin-bottom: 36px;
     }
   `;
+
+  useEffect(() => dispatch(setTitlePage('Create new ticket')));
 
   return (
     <div className="container">

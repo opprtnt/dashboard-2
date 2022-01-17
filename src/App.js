@@ -1,27 +1,17 @@
 import './scss/App.scss';
 import { Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
-import Auth from './hoc/Auth';
-import TicketsPage from './pages/TicketsPage';
-import NewTicketPage from './pages/NewTicketPage';
-import { TicketPage } from './pages/TicketPage';
-import Layout from './components/Layout';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { collection, getDocs, getFirestore, limit, orderBy, query } from 'firebase/firestore';
 import { useContext, useEffect } from 'react';
-import { changeFilter, initAuth, initCurrentUser, setData, setUserAuth } from './store/authSlice';
+import { initCurrentUser } from './store/appSlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ContextLogin } from './index';
+import { routes } from './routes';
 
 function App() {
   const theme = useSelector((state) => state.user.themeDark);
   const dispatch = useDispatch();
-  const db = getFirestore();
-  const docRef = collection(db, 'tickets');
-  const q = query(docRef, orderBy('date', 'desc'), limit(100));
   const { auth } = useContext(ContextLogin);
   const [user] = useAuthState(auth);
   const themeDark = createTheme({
@@ -64,65 +54,23 @@ function App() {
     }
   `;
 
-  useEffect(async () => {
-    let arr = [];
-    const docSnap = await getDocs(q);
-    docSnap.forEach((doc) => {
-      doc.data().date = doc.data().date.seconds;
-      arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
-    });
-    dispatch(setData(arr));
-    dispatch(changeFilter(arr));
-  }, [user, dispatch]);
-
   useEffect(() => {
     if (user) dispatch(initCurrentUser(JSON.parse(JSON.stringify(user))));
-    console.log(user);
-  }, [user]);
-
-  //if (user === null) return <Loader />;
+  }, [user, dispatch]);
 
   return (
     <ThemeProvider theme={themeDark}>
       <App className="App">
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="dashboard" element={<Layout />}>
-            <Route
-              index
-              element={
-                <Auth>
-                  <Dashboard />
-                </Auth>
-              }
-            />
+          <Route path={routes.homepage.path} element={routes.homepage.element} />
+          <Route path={routes.dashboard.path} element={routes.elementLayot}>
+            <Route index element={routes.dashboard.element} />
           </Route>
-          <Route path="tickets" element={<Layout />}>
-            <Route
-              index
-              element={
-                <Auth>
-                  <TicketsPage />
-                </Auth>
-              }
-            />
+          <Route path={routes.tickets.path} element={routes.elementLayot}>
+            <Route index element={routes.tickets.element} />
 
-            <Route
-              path="new"
-              element={
-                <Auth>
-                  <NewTicketPage />
-                </Auth>
-              }
-            />
-            <Route
-              path=":id"
-              element={
-                <Auth>
-                  <TicketPage />
-                </Auth>
-              }
-            />
+            <Route path={routes.new.path} element={routes.new.element} />
+            <Route path={routes.ticketId.path} element={routes.ticketId.element} />
           </Route>
         </Routes>
       </App>

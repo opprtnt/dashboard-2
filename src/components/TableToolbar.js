@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import ViewAgendaRoundedIcon from '@mui/icons-material/ViewAgendaRounded';
 import { useDispatch } from 'react-redux';
-import { changeViewTable } from '../store/authSlice';
+import { changeViewTable } from '../store/appSlice';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';

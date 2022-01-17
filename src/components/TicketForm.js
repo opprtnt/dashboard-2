@@ -1,7 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { collection, getFirestore, serverTimestamp } from 'firebase/firestore';
+import { useState } from 'react';
+import { collection, doc, getFirestore, increment, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { addDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useContext } from 'react';
@@ -11,11 +11,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
 
 function TicketForm() {
-  const [priority, setPriority] = useState();
+  const [priority, setPriority] = useState('1');
   let navigate = useNavigate();
   const db = getFirestore();
   const { auth } = useContext(ContextLogin);
   const [user] = useAuthState(auth);
+  const docCount = doc(db, 'count', 'count');
 
   const Button = styled.button`
     margin-top: 32px;
@@ -43,6 +44,9 @@ function TicketForm() {
       date: serverTimestamp(),
       completed: false,
     });
+    await updateDoc(docCount, {
+      count: increment(1),
+    });
     toast.success('Created successfully');
     navigate(`/tickets/${docRef.id}`);
   };
@@ -58,6 +62,7 @@ function TicketForm() {
           render={({ field }) => {
             return (
               <TextField
+                value={''}
                 error={errors?.title?.type === 'required'}
                 label={errors?.title?.type === 'required' ? 'Обязательное поле!' : 'Ticket Title *'}
                 {...field}
@@ -78,14 +83,14 @@ function TicketForm() {
                   {errors?.priority?.type === 'required' ? 'Обязательное поле!' : 'Select priority *'}
                 </InputLabel>
                 <Select
-                  value={priority || '5'}
+                  value={priority}
                   error={errors?.priority?.type === 'required'}
                   label={errors?.priority?.type === 'required' ? 'Обязательное поле!' : 'Select priority *'}
                   onChange={handleChange}
                   sx={{ width: '344px' }}
                   {...field}
                 >
-                  <MenuItem value="5">
+                  <MenuItem value="1">
                     <em>None</em>
                   </MenuItem>
                   <MenuItem value={0}>Low</MenuItem>

@@ -3,7 +3,7 @@ import Brightness5Icon from '@mui/icons-material/Brightness5';
 import { IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { toggleThemeDark } from '../store/authSlice';
+import { toggleThemeDark } from '../store/appSlice';
 
 export default function ThemeButtons() {
   const ThemeButtons = styled.div`

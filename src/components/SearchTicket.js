@@ -3,17 +3,16 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { changeFilter } from '../store/authSlice';
+import { setFilter } from '../store/appSlice';
 import { debounce } from '../functions';
 
 export default function SearchTicket() {
-  const data = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.user.themeDark);
+
   let handleChange = (e) => {
     const searchItem = e.target.value;
-    let ticketList = data.filter((ticket) => ticket.title.includes(searchItem.toLowerCase()));
-    dispatch(changeFilter(ticketList));
+    dispatch(setFilter(searchItem));
   };
 
   handleChange = debounce(handleChange, 400);

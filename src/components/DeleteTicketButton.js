@@ -3,7 +3,7 @@ import { Close } from '@mui/icons-material';
 import { useContext, useState } from 'react';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteDoc, doc, getFirestore } from 'firebase/firestore';
+import { deleteDoc, doc, getFirestore, increment, updateDoc } from 'firebase/firestore';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ContextLogin } from '../index';
@@ -15,6 +15,7 @@ function DeleteTicketButton({ rowUserUid, id, completed }) {
   const docRef = doc(db, 'tickets', id);
   const { auth } = useContext(ContextLogin);
   const [user] = useAuthState(auth);
+  const docCount = doc(db, 'count', 'count');
 
   const showDeleteTicket = (e) => {
     e.stopPropagation();
@@ -25,6 +26,9 @@ function DeleteTicketButton({ rowUserUid, id, completed }) {
     e.stopPropagation();
     await deleteDoc(docRef);
     changeAcceptDelete(!acceptDelete);
+    await updateDoc(docCount, {
+      count: increment(-1),
+    });
     toast.success('Delete successfully');
   };
 

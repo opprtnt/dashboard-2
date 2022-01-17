@@ -1,18 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Select, MenuItem, FormControl } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { collection, getFirestore, serverTimestamp } from 'firebase/firestore';
+import { useEffect, useRef, useState } from 'react';
+import { getFirestore, increment, serverTimestamp } from 'firebase/firestore';
 import { updateDoc, doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useContext } from 'react';
-import { ContextLogin } from '../index';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import InputLabel from '@mui/material/InputLabel';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTitlePage } from '../store/authSlice';
+import { setTitlePage } from '../store/appSlice';
 import styled from 'styled-components';
 
 function TicketPage() {
@@ -20,12 +17,15 @@ function TicketPage() {
   let navigate = useNavigate();
   const db = getFirestore();
   const docRef = doc(db, 'tickets', id);
+  const docCount = doc(db, 'count', 'count');
   const [data, setData] = useState({ title: '' });
   const [isUser, setIsUser] = useState(false);
   const [status, setStatus] = useState();
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
-  dispatch(setTitlePage(data.title));
+  const componentMounted = useRef(true);
+
+  useEffect(() => dispatch(setTitlePage(data.title)), [dispatch, data.title]);
 
   const TicketForm = styled.div`
     padding: 32px;
@@ -63,19 +63,26 @@ function TicketPage() {
 
   useEffect(() => {
     if (user && data.title) {
-      setIsUser(user.uid == data.user.uid);
+      setIsUser(user.uid === data.user.uid);
       setStatus(data.completed);
     }
-  }, [setIsUser, data.title, setStatus]);
+  }, [setIsUser, data.title, setStatus, data.completed, user]);
 
-  useEffect(async () => {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
-      setData(docSnap.data());
-    } else {
-      console.log('No such document!');
+  useEffect(() => {
+    async function getTicket() {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+      } else {
+        console.log('No such document!');
+      }
     }
+    if (componentMounted.current) {
+      getTicket();
+    }
+    return () => {
+      componentMounted.current = false;
+    };
   }, [setData]);
 
   const {
@@ -103,6 +110,9 @@ function TicketPage() {
 
   const deleteTicket = async () => {
     await deleteDoc(docRef);
+    await updateDoc(docCount, {
+      count: increment(-1),
+    });
     navigate('/tickets');
   };
 

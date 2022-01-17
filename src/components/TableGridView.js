@@ -1,14 +1,21 @@
 import Stack from '@mui/material/Stack';
 import TicketCard from './TicketCard';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { setOrderBy, setSortTable } from '../store/appSlice';
 
-function TableGridView({ rowsPerPage, page }) {
-  const filter = useSelector((state) => state.user.filter);
+function TableGridView({ data }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setOrderBy('date'));
+    dispatch(setSortTable('desc'));
+  }, [dispatch]);
 
   return (
     <Stack direction="row" sx={{ flexWrap: 'wrap', margin: '40px 24px 32px' }}>
-      {filter.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((ticket) => (
+      {data.map((ticket) => (
         <TicketCard key={ticket.id} ticketData={ticket} />
       ))}
     </Stack>

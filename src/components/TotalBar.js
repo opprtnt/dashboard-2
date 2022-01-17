@@ -27,11 +27,14 @@ export default function TotalBar({ docRef }) {
     }
   `;
 
-  useEffect(async () => {
-    const docSnap = await getDocs(queryPeriod);
-    let container = [];
-    docSnap.forEach((v) => container.push(v.data()));
-    setDataOfPeriod(container);
+  useEffect(() => {
+    async function setDataPeriod() {
+      const docSnap = await getDocs(queryPeriod);
+      let container = [];
+      docSnap.forEach((v) => container.push(v.data()));
+      setDataOfPeriod(container);
+    }
+    setDataPeriod();
   }, []);
 
   useEffect(() => {
