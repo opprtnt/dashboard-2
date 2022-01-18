@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { ContextLogin } from '../index';
-import { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { initCurrentUser } from '../store/appSlice';
 
-export default function SubmitButton() {
+const SubmitButton = () => {
   const SubmitButton = styled.button`
     background: #3751ff;
     color: white;
@@ -33,4 +33,5 @@ export default function SubmitButton() {
   };
 
   return <SubmitButton onClick={click}>Login with Google</SubmitButton>;
-}
+};
+export default SubmitButton;

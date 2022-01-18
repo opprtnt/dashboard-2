@@ -9,23 +9,24 @@ let dateTable = Date.now() / 1000;
 dateNow.setHours(0, 0, 0, 0);
 const period = new Date(dateNow - 14 * 24 * 60 * 60 * 1000);
 
+const Diagramma = styled.div`
+  margin: 30px 0;
+  border: 1px solid #dfe0eb;
+  border-radius: 8px;
+  padding: 32px 64px 32px 32px;
+  h3 {
+    margin-bottom: 8px;
+  }
+  p {
+    margin-bottom: 72px;
+    font-size: 12px;
+  }
+`;
+
 export default function TotalBar({ docRef }) {
   const queryPeriod = query(docRef, where('completed', '==', true), where('date', '>', period));
   const [dataOfPeriod, setDataOfPeriod] = useState();
   const [dataBar, setDataBar] = useState();
-  const Diagramma = styled.div`
-    margin: 30px 0;
-    border: 1px solid #dfe0eb;
-    border-radius: 8px;
-    padding: 32px 64px 32px 32px;
-    h3 {
-      margin-bottom: 8px;
-    }
-    p {
-      margin-bottom: 72px;
-      font-size: 12px;
-    }
-  `;
 
   useEffect(() => {
     async function setDataPeriod() {

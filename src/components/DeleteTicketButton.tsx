@@ -1,31 +1,34 @@
 import DoneIcon from '@mui/icons-material/Done';
 import { Close } from '@mui/icons-material';
-import { useContext, useState } from 'react';
+import React, { MouseEvent, useState, FC } from 'react';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDoc, doc, getFirestore, increment, updateDoc } from 'firebase/firestore';
 import toast, { Toaster } from 'react-hot-toast';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { ContextLogin } from '../index';
-import PropTypes from 'prop-types';
+import { useAppSelector } from '../store';
 
-function DeleteTicketButton({ rowUserUid, id, completed }) {
+interface DeleteButtonProps {
+  rowUserUid: string;
+  id: string;
+  completed: boolean;
+}
+
+const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }) => {
   const [acceptDelete, changeAcceptDelete] = useState(false);
   const db = getFirestore();
   const docRef = doc(db, 'tickets', id);
-  const { auth } = useContext(ContextLogin);
-  const [user] = useAuthState(auth);
+  const user = useAppSelector((state) => state.user.userData);
   const docCount = doc(db, 'count', 'count');
 
-  const showDeleteTicket = (e) => {
+  const showDeleteTicket = (e: MouseEvent) => {
     e.stopPropagation();
-    changeAcceptDelete(!acceptDelete);
+    changeAcceptDelete((prev) => !prev);
   };
 
-  const deleteTicket = async (e) => {
+  const deleteTicket = async (e: MouseEvent) => {
     e.stopPropagation();
     await deleteDoc(docRef);
-    changeAcceptDelete(!acceptDelete);
+    changeAcceptDelete((prev) => !prev);
     await updateDoc(docCount, {
       count: increment(-1),
     });
@@ -52,12 +55,6 @@ function DeleteTicketButton({ rowUserUid, id, completed }) {
       <Toaster position="top-right" reverseOrder={false} />
     </>
   );
-}
-
-DeleteTicketButton.propTypes = {
-  rowUserUid: PropTypes.string,
-  id: PropTypes.string,
-  completed: PropTypes.bool,
 };
 
 export default DeleteTicketButton;

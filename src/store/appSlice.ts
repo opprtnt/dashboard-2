@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export interface RootState {}
 const authSlice = createSlice({
   name: 'user',
   initialState: {
     auth: null,
-    userData: null,
+    userData: { uid: '', displayName: '', photoURL: '' },
     data: null,
     viewTable: true,
     titlePage: 'Title',

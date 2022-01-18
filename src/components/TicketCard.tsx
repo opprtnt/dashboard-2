@@ -1,61 +1,86 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import { convertDate, convertTime, getLastUpdate } from '../functions';
 import { Avatar, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteTicketButton from './DeleteTicketButton';
-import PropTypes from 'prop-types';
+import { useAppSelector } from '../store';
+import React, { FC } from 'react';
 
-function TicketCard({ ticketData }) {
-  const theme = useSelector((state) => state.user.themeDark);
-  const TicketCard = styled.div`
-    box-shadow: ${theme ? '0px 0px 10px #616473' : '0px 0px 10px rgba(192, 197, 233, 0.6)'};
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 0px 10px 10px 0;
-    width: 19.9%;
-    padding: 16px 22px;
-    background-color: ${ticketData.completed ? (theme ? '#6D838D' : '#EBFFE5') : 'white'};
+interface TicketCardProps {
+  ticketData: {
+    user: { uid: string, photo: string, displayName: string },
+    title: string,
+    completed: boolean,
+    id: string,
+    date: {
+      seconds: number,
+    },
+    priority: number,
+  };
+}
 
-    &:nth-of-type(4n) {
+interface ICard {
+  completed: boolean;
+  themeI: boolean;
+}
+
+const Card =
+  styled.div <
+  ICard >
+  `
+  box-shadow: ${(props) => (props.themeI ? '0px 0px 10px #4d5254' : '0px 0px 10px #616473')};
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 10px 10px 0;
+  width: 19.9%;
+  padding: 16px 22px;
+  background-color: ${(props) => (props.completed ? (props) => (props.themeI ? '#6D838D' : '#EBFFE5') : 'white')};
+
+  &:nth-of-type(4n) {
+    margin-right: 0;
+  }
+
+  @media (max-width: 1440px) {
+    width: 28%;
+    &:nth-of-type(3n) {
       margin-right: 0;
     }
+    &:nth-of-type(4n) {
+      margin-right: 10px;
+    }
+  }
+  .ticket-card__row {
+    display: flex;
+    justify-content: space-between;
+  }
 
-    @media (max-width: 1440px) {
-      width: 28%;
-      &:nth-of-type(3n) {
-        margin-right: 0;
-      }
-      &:nth-of-type(4n) {
-        margin-right: 10px;
-      }
-    }
-    .ticket-card__row {
-      display: flex;
-      justify-content: space-between;
-    }
+  button {
+    width: 25px;
+    height: 25px;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+  .table__subtext-cell {
+    margin-bottom: 16px;
+  }
+`;
 
-    button {
-      width: 25px;
-      height: 25px;
-    }
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-    .table__subtext-cell {
-      margin-bottom: 16px;
-    }
-  `;
-
+const TicketCard: FC<TicketCardProps> = ({ ticketData }) => {
+  const theme = useAppSelector((state) => state.user.themeDark);
   let navigate = useNavigate();
-  const navigateToTicket = (id) => {
-    console.log(id);
+  const navigateToTicket = (id: string) => {
     navigate(`/tickets/${id}`);
   };
 
   return (
-    <TicketCard onClick={() => navigateToTicket(ticketData.id)} className="ticket-card">
+    <Card
+      themeI={theme}
+      completed={ticketData.completed}
+      onClick={() => navigateToTicket(ticketData.id)}
+      className="ticket-card"
+    >
       <div className="ticket-card__row">
         <div className="ticket-card__date">
           <p className="table__text-cell">{convertDate(ticketData.date.seconds)}</p>
@@ -101,12 +126,8 @@ function TicketCard({ ticketData }) {
         ></Avatar>
         <span className="table__text-cell">{ticketData.user.displayName}</span>
       </div>
-    </TicketCard>
+    </Card>
   );
-}
-
-TicketCard.propTypes = {
-  ticketData: PropTypes.object,
 };
 
 export default TicketCard;

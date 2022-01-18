@@ -7,7 +7,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { createContext } from 'react';
 import { Provider } from 'react-redux';
-import store from './store/index';
+import { store } from './store/index';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB5wRSoNDFoW6OGPm-90m-9_yrJDShFLWw',

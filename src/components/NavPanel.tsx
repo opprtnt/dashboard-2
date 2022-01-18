@@ -1,7 +1,8 @@
+import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import '../scss/NavPanel.scss';
 
-export default function NavPanel() {
+const NavPanel: FC = () => {
   return (
     <nav className="nav">
       <div className="nav__logo">
@@ -53,4 +54,5 @@ export default function NavPanel() {
       </ul>
     </nav>
   );
-}
+};
+export default NavPanel;

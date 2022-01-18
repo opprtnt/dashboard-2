@@ -73,7 +73,7 @@ export default function LoginPage() {
           <SubmitButton />
         </form>{' '}
         <p className="login__sign-up">
-          Don`t have an account?<a href="javascript:void(0)">Sign up</a>
+          Don`t have an account?<a href="/">Sign up</a>
         </p>
       </div>
     </div>

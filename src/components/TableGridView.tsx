@@ -1,11 +1,25 @@
 import Stack from '@mui/material/Stack';
 import TicketCard from './TicketCard';
 import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { setOrderBy, setSortTable } from '../store/appSlice';
 
-function TableGridView({ data }) {
+interface ITableGridView {
+  data: [
+    {
+      user: { uid: string, photo: string, displayName: string },
+      title: string,
+      completed: boolean,
+      id: string,
+      date: {
+        seconds: number,
+      },
+      priority: number,
+    }
+  ];
+}
+
+const TableGridView: FC<ITableGridView> = ({ data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,11 +34,6 @@ function TableGridView({ data }) {
       ))}
     </Stack>
   );
-}
-
-TableGridView.propTypes = {
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
 };
 
 export default TableGridView;

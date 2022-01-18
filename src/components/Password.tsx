@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import React, { ChangeEvent, FC, MouseEvent, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-export default function Password() {
-  const handleChange = (prop) => (event) => {
+const Password = (): React.ReactElement => {
+  const handleChange = (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
   };
   const [values, setValues] = useState({
@@ -23,7 +23,7 @@ export default function Password() {
     });
   };
 
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event: MouseEvent) => {
     event.preventDefault();
   };
 
@@ -50,4 +50,5 @@ export default function Password() {
       }
     />
   );
-}
+};
+export default Password;

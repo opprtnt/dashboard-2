@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import NavPanel from '../components/NavPanel';
+import NavPanel from './NavPanel';
 import HeaderAccount from './HeaderAccount';
+import React from 'react';
 
 export default function Layout() {
   return (

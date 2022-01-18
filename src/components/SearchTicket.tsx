@@ -1,21 +1,21 @@
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import { setFilter } from '../store/appSlice';
-import { debounce } from '../functions';
+import React, { ChangeEvent } from 'react';
+import { useAppDispatch, useAppSelector } from '../store';
+import { useDispatch } from 'react-redux';
 
-export default function SearchTicket() {
+const SearchTicket: React.FC = () => {
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.user.themeDark);
+  const theme = useAppSelector((state) => state.user.themeDark);
 
-  let handleChange = (e) => {
+  let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchItem = e.target.value;
     dispatch(setFilter(searchItem));
   };
 
-  handleChange = debounce(handleChange, 400);
+  //handleChange = debounce(handleChange, 400);
   return (
     <TextField
       sx={{
@@ -28,10 +28,11 @@ export default function SearchTicket() {
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <SearchIcon sx={{ color: theme ? '#bdbdbd' : false }} />
+            <SearchIcon />
           </InputAdornment>
         ),
       }}
     />
   );
-}
+};
+export default SearchTicket;

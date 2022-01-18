@@ -5,21 +5,22 @@ import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import ViewAgendaRoundedIcon from '@mui/icons-material/ViewAgendaRounded';
 import { useDispatch } from 'react-redux';
 import { changeViewTable } from '../store/appSlice';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAppSelector } from '../store';
+import React from 'react';
+
+const Button = styled.button`
+  margin-left: 20px;
+`;
 
 export default function ToolbarS() {
   const dispatch = useDispatch();
-  const viewTable = useSelector((state) => state.user.viewTable);
+  const viewTable = useAppSelector((state) => state.user.viewTable);
 
-  const onChangeViewTable = (v) => {
+  const onChangeViewTable = (v: boolean) => {
     dispatch(changeViewTable(v));
   };
-
-  const Button = styled.button`
-    margin-left: 20px;
-  `;
 
   return (
     <Toolbar sx={{ justifyContent: 'space-between' }}>
