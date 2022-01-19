@@ -2,7 +2,7 @@ import LoginPage from './pages/LoginPage';
 import Auth from './hoc/Auth';
 import NewTicketPage from './pages/NewTicketPage';
 import { TicketPage } from './pages/TicketPage';
-import Layout from './components/Layout.js';
+import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import TicketsPage from './pages/TicketsPage';
 
