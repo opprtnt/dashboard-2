@@ -1,21 +1,15 @@
-import { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import TicketForm from '../components/TicketForm';
 import { setTitlePage } from '../store/appSlice';
+import { NewTicketForm } from '../style/style';
 
-export default function NewTicketPage() {
+const NewTicketPage: FC = () => {
   const dispatch = useDispatch();
 
-  const NewTicketForm = styled.div`
-    padding: 32px;
-    border-radius: 8px;
-    h3 {
-      margin-bottom: 36px;
-    }
-  `;
-
-  useEffect(() => dispatch(setTitlePage('Create new ticket')));
+  useEffect(() => {
+    dispatch(setTitlePage('Create new ticket'));
+  });
 
   return (
     <div className="container">
@@ -27,4 +21,5 @@ export default function NewTicketPage() {
       </div>
     </div>
   );
-}
+};
+export default NewTicketPage;

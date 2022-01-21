@@ -5,36 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import DeleteTicketButton from './DeleteTicketButton';
 import { useAppSelector } from '../store';
 import React, { FC } from 'react';
-
-interface TicketCardProps {
-  ticketData: {
-    user: { uid: string, photo: string, displayName: string },
-    title: string,
-    completed: boolean,
-    id: string,
-    date: {
-      seconds: number,
-    },
-    priority: number,
-  };
-}
-
-interface ICard {
-  completed: boolean;
-  themeI: boolean;
-}
+import { TicketCardProps, ICard } from '../interface';
 
 const Card =
   styled.div <
   ICard >
   `
-  box-shadow: ${(props) => (props.themeI ? '0px 0px 10px #4d5254' : '0px 0px 10px #616473')};
+  box-shadow: ${({ themeI }) => (themeI ? '0px 0px 10px #4d5254' : '0px 0px 10px #616473')};
   border-radius: 4px;
   cursor: pointer;
   margin: 0px 10px 10px 0;
   width: 19.9%;
   padding: 16px 22px;
-  background-color: ${(props) => (props.completed ? (props) => (props.themeI ? '#6D838D' : '#EBFFE5') : 'white')};
+  background-color: ${({ completed }) => (completed ? ({ themeI }) => (themeI ? '#6D838D' : '#EBFFE5') : 'white')};
 
   &:nth-of-type(4n) {
     margin-right: 0;

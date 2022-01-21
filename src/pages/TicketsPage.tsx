@@ -1,12 +1,14 @@
 import TableDashboard from '../components/TableDashboard';
 import { useDispatch } from 'react-redux';
 import { setTitlePage } from '../store/appSlice';
-import { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 
-export default function TicketsPage() {
+const TicketsPage: FC = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(setTitlePage('Tickets')));
+  useEffect(() => {
+    dispatch(setTitlePage('Tickets'));
+  });
 
   return (
     <div className="container">
@@ -16,4 +18,5 @@ export default function TicketsPage() {
       </div>
     </div>
   );
-}
+};
+export default TicketsPage;

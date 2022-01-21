@@ -1,5 +1,3 @@
-import { ChangeEvent } from 'react';
-
 const mounthList = [
   'January',
   'February',
@@ -33,12 +31,12 @@ export const getLastUpdate = (sec: number) => {
   return convertDay > 1 ? `Updated ${convertDay} days ago` : `Updated ${convertDay} day ago`;
 };
 
-// export function debounce(func: (e: ChangeEvent<HTMLInputElement>) => void, timeout: number) {
-//   let timer = 0;
-//   return (...args: any[]) => {
-//     window.clearTimeout(timer);
-//     timer = window.setTimeout(() => {
-//       func.apply(this, args);
-//     }, timeout);
-//   };
-// }
+export function debounce(func: (...params: any[]) => any, timeout: number) {
+  let timer: any;
+  return (...args: any[]) => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+}

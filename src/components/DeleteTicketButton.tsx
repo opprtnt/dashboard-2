@@ -6,12 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDoc, doc, getFirestore, increment, updateDoc } from 'firebase/firestore';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAppSelector } from '../store';
-
-interface DeleteButtonProps {
-  rowUserUid: string;
-  id: string;
-  completed: boolean;
-}
+import { DeleteButtonProps } from '../interface';
 
 const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }) => {
   const [acceptDelete, changeAcceptDelete] = useState(false);

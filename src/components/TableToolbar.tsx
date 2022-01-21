@@ -6,13 +6,9 @@ import ViewAgendaRoundedIcon from '@mui/icons-material/ViewAgendaRounded';
 import { useDispatch } from 'react-redux';
 import { changeViewTable } from '../store/appSlice';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { useAppSelector } from '../store';
 import React from 'react';
-
-const Button = styled.button`
-  margin-left: 20px;
-`;
+import { Button } from '../style/style';
 
 export default function ToolbarS() {
   const dispatch = useDispatch();

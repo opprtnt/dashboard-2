@@ -16,7 +16,6 @@ import {
   limit,
   limitToLast,
   orderBy,
-  Query,
   query,
   startAfter,
   where,
@@ -55,7 +54,7 @@ const TableDashboard: FC = () => {
         const first = query(collection(db, 'tickets'), orderBy(sortOrderBy, sort), limit(rowsPerPage));
         const documentSnapshots = await getDocs(first);
         setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-        let arr: any = [];
+        let arr: {}[] = [];
         documentSnapshots.forEach((doc) => {
           arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
         });
@@ -91,7 +90,7 @@ const TableDashboard: FC = () => {
           const documentSnapshots = await getDocs(queryNextPage);
           setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
           setLastVisiblePrev(documentSnapshots.docs[0]);
-          let arr: any = [];
+          let arr:{}[] = [];
           documentSnapshots.forEach((doc) => {
             arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
           });
@@ -109,7 +108,7 @@ const TableDashboard: FC = () => {
           const documentSnapshots = await getDocs(queryNextPage);
           setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
           setLastVisiblePrev(documentSnapshots.docs[0]);
-          let arr:any = [];
+          let arr:{}[] = [];
           documentSnapshots.forEach((doc) => {
             arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
           });
@@ -124,15 +123,16 @@ const TableDashboard: FC = () => {
 
   useEffect(() => {
     async function filterSearch() {
-      let q:any;
-      if (searchItem) {
-        const qLength = query(
+      if (!searchItem) return;
+      // get length search collection
+        let qLength = query(
           collection(db, 'tickets'),
           where('title', '>=', searchItem),
           where('title', '<=', searchItem + 'я')
         );
         const documentSnapshots1 = await getDocs(qLength);
         setDataLength(documentSnapshots1.docs.length);
+        let q = query(collection(db, 'tickets'));
         if (!lastVisiblePrevSearch || page === lastPage) {
           setPage(0);
           q = query(
@@ -143,22 +143,12 @@ const TableDashboard: FC = () => {
           );
           setLastPage(0);
         }
-        if (lastVisibleSearch && page > lastPage) {
+        if (lastVisibleSearch&&page!==lastPage) {
           q = query(
             collection(db, 'tickets'),
             where('title', '>=', searchItem),
             where('title', '<=', searchItem + 'я'),
-            startAfter(lastVisibleSearch),
-            limit(rowsPerPage)
-          );
-          setLastPage(page);
-        }
-        if (lastVisibleSearch && page < lastPage) {
-          q = query(
-            collection(db, 'tickets'),
-            where('title', '>=', searchItem),
-            where('title', '<=', searchItem + 'я'),
-            endBefore(lastVisiblePrevSearch),
+            ((page > lastPage)? startAfter(lastVisibleSearch):endBefore(lastVisiblePrevSearch)),
             limit(rowsPerPage)
           );
           setLastPage(page);
@@ -171,10 +161,10 @@ const TableDashboard: FC = () => {
           arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
         });
         dispatch(setData(arr));
-      }
+      }filterSearch();
     }
-    filterSearch();
-  }, [searchItem, page]);
+    
+  , [searchItem, page]);
 
   const handleChangePage = (event:MouseEvent<HTMLButtonElement, globalThis.MouseEvent> | null, newPage:number) => {
     setPage(newPage);

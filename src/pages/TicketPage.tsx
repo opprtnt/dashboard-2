@@ -1,65 +1,34 @@
 import { useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Select, MenuItem, FormControl } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, FC } from 'react';
 import { getFirestore, increment, serverTimestamp } from 'firebase/firestore';
 import { updateDoc, doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import InputLabel from '@mui/material/InputLabel';
 import toast, { Toaster } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setTitlePage } from '../store/appSlice';
 import styled from 'styled-components';
+import { useAppSelector } from '../store';
 
-function TicketPage() {
+const TicketPage: FC = () => {
   const { id } = useParams();
   let navigate = useNavigate();
   const db = getFirestore();
-  const docRef = doc(db, 'tickets', id);
+  const docRef = doc(db, 'tickets', id!);
   const docCount = doc(db, 'count', 'count');
-  const [data, setData] = useState({ title: '' });
+  const [data, setData] = useState({ title: '', user: { uid: '' }, completed: false, priority:0, ticket:'' });
   const [isUser, setIsUser] = useState(false);
-  const [status, setStatus] = useState();
-  const user = useSelector((state) => state.user.userData);
+  const [status, setStatus] = useState(false);
+  const user = useAppSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   const componentMounted = useRef(true);
 
-  useEffect(() => dispatch(setTitlePage(data.title)), [dispatch, data.title]);
-
-  const TicketForm = styled.div`
-    padding: 32px;
-    border-radius: 8px;
-    h3 {
-      margin-bottom: 36px;
-    }
-    .row {
-      justify-content: space-between;
-    }
-    .form {
-      max-width: 704px;
-      &__comleted-block {
-        margin-top: 32px;
-        font-size: 1.5rem;
-      }
-    }
-  `;
-  const Button = styled.button`
-    margin-top: 32px;
-    background: ${(props) => (props.yellow ? '#F2C94C' : props.red ? '#EB5757' : '#2f80ed')};
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 8px 20px;
-    line-height: 24px;
-    border-radius: 8px;
-    border: none;
-    display: block;
-    cursor: pointer;
-    & + & {
-      margin-left: 30px;
-    }
-  `;
+  useEffect(() => {
+    dispatch(setTitlePage(data.title));
+  }, [dispatch, data.title]);
 
   useEffect(() => {
     if (user && data.title) {
@@ -72,7 +41,7 @@ function TicketPage() {
     async function getTicket() {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setData(docSnap.data());
+        setData(JSON.parse(JSON.stringify(docSnap.data())));
       } else {
         console.log('No such document!');
       }
@@ -92,8 +61,8 @@ function TicketPage() {
   } = useForm({
     criteriaMode: 'all',
   });
-  const sendTicket = async (data) => {
-    await updateDoc(doc(db, 'tickets', id), {
+  const sendTicket = async (data:{ title: string, description: string, priority: number }) => {
+    await updateDoc(doc(db, 'tickets', id!), {
       title: data.title,
       ticket: data.description,
       priority: data.priority,
@@ -156,7 +125,6 @@ function TicketPage() {
                     </InputLabel>
                     <Select
                       inputProps={{ readOnly: !isUser || status }}
-                      value={data.priority}
                       {...field}
                       error={errors?.priority?.type === 'required'}
                       sx={{ width: '344px' }}
@@ -194,7 +162,7 @@ function TicketPage() {
             <div className="row">
               <div className="row">
                 {isUser && !status && (
-                  <Button className="primary" type="submit">
+                  <Button type="submit">
                     Save Details
                   </Button>
                 )}
@@ -215,8 +183,41 @@ function TicketPage() {
           <Toaster position="top-right" reverseOrder={true}></Toaster>
         </TicketForm>
       </div>
-      {/* <p>{user1.uid}</p> */}
     </div>
   );
-}
+};
 export { TicketPage };
+
+const Button = styled.button<{yellow?:boolean, red?:boolean}>`
+  margin-top: 32px;
+  background: ${({yellow, red}) => (yellow ? '#F2C94C' : red ? '#EB5757' : '#2f80ed')};
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 20px;
+  line-height: 24px;
+  border-radius: 8px;
+  border: none;
+  display: block;
+  cursor: pointer;
+  & + & {
+    margin-left: 30px;
+  }
+`;
+const TicketForm = styled.div`
+  padding: 32px;
+  border-radius: 8px;
+  h3 {
+    margin-bottom: 36px;
+  }
+  .row {
+    justify-content: space-between;
+  }
+  .form {
+    max-width: 704px;
+    &__comleted-block {
+      margin-top: 32px;
+      font-size: 1.5rem;
+    }
+  }
+`;

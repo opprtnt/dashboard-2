@@ -1,16 +1,18 @@
 import './scss/App.scss';
 import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { initCurrentUser } from './store/appSlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ContextLogin } from './index';
 import { routes } from './routes';
+import { useAppSelector } from './store';
+import Loader from './components/Loader';
 
-function App() {
-  const theme = useSelector((state) => state.user.themeDark);
+const App: FC = () => {
+  const theme = useAppSelector((state) => state.user.themeDark);
   const dispatch = useDispatch();
   const { auth } = useContext(ContextLogin);
   const [user] = useAuthState(auth);
@@ -24,7 +26,7 @@ function App() {
       },
     },
   });
-  const App = styled.div`
+  const AppComponent = styled.div`
     color: ${theme ? 'white' : '#252733'};
     background-color: ${theme ? '#252733' : '#f7f8fc'};
     min-height: 100vh;
@@ -44,10 +46,6 @@ function App() {
     }
     .text-color {
       color: ${theme ? 'white' : '#252733'};
-      .Mui-disabled,
-      .MuiSelect-icon {
-        color: ${theme ? '#bdbdbd' : false};
-      }
     }
     .ticket-card {
       background-color: ${theme ? '#9598ad' : false};
@@ -58,24 +56,26 @@ function App() {
     if (user) dispatch(initCurrentUser(JSON.parse(JSON.stringify(user))));
   }, [user, dispatch]);
 
+  if (!user) return <Loader />;
+
   return (
     <ThemeProvider theme={themeDark}>
-      <App className="App">
+      <AppComponent className="App">
         <Routes>
           <Route path={routes.homepage.path} element={routes.homepage.element} />
-          <Route path={routes.dashboard.path} element={routes.elementLayot}>
+          <Route path={routes.dashboard.path} element={routes.elementLayout}>
             <Route index element={routes.dashboard.element} />
           </Route>
-          <Route path={routes.tickets.path} element={routes.elementLayot}>
+          <Route path={routes.tickets.path} element={routes.elementLayout}>
             <Route index element={routes.tickets.element} />
 
             <Route path={routes.new.path} element={routes.new.element} />
             <Route path={routes.ticketId.path} element={routes.ticketId.element} />
           </Route>
         </Routes>
-      </App>
+      </AppComponent>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

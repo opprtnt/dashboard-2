@@ -8,12 +8,15 @@ import { Avatar } from '@mui/material';
 import TableHead from '@mui/material/TableHead';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Stack from '@mui/material/Stack';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { convertDate, convertTime, getLastUpdate } from '../functions';
 import DeleteTicketButton from './DeleteTicketButton';
 import '../scss/TicketsPage.scss';
-import PropTypes from 'prop-types';
 import { setSortTable, setOrderBy } from '../store/appSlice';
+import { FC } from 'react';
+import { ITableView } from '../interface';
+import { useAppSelector } from '../store';
+import React from 'react';
 
 const headCells = [
   {
@@ -26,12 +29,12 @@ const headCells = [
   },
 ];
 
-function TableColView({ data }) {
+const TableColView: FC<ITableView> = ({ data }) => {
   let navigate = useNavigate();
-  const theme = useSelector((state) => state.user.themeDark);
+  const theme = useAppSelector((state) => state.user.themeDark);
   const dispatch = useDispatch();
 
-  const navigateToTicket = (e, id) => {
+  const navigateToTicket = (id: string) => {
     navigate(`/tickets/${id}`);
   };
 
@@ -41,7 +44,8 @@ function TableColView({ data }) {
       dispatch(setSortTable('desc'));
       headCells[0].sort = 'desc';
     } else {
-      dispatch(setSortTable('asc'), (headCells[0].sort = 'asc'));
+      dispatch(setSortTable('asc'));
+      headCells[0].sort = 'asc';
     }
     dispatch(setOrderBy('date'));
   };
@@ -51,7 +55,8 @@ function TableColView({ data }) {
       dispatch(setSortTable('desc'));
       headCells[1].sort = 'desc';
     } else {
-      dispatch(setSortTable('asc'), (headCells[1].sort = 'asc'));
+      dispatch(setSortTable('asc'));
+      headCells[1].sort = 'asc';
     }
     dispatch(setOrderBy('priority'));
   };
@@ -60,9 +65,7 @@ function TableColView({ data }) {
     <Table sx={{ maxWidth: '1122px', fontWeight: '600' }}>
       <TableHead>
         <TableRow>
-          <TableCell sx={{ color: theme ? '#bdbdbd' : '#9FA2B4', width: '440px' }} key={headCells[0].id}>
-            Ticket Details
-          </TableCell>
+          <TableCell sx={{ color: theme ? '#bdbdbd' : '#9FA2B4', width: '440px' }}>Ticket Details</TableCell>
           <TableCell sx={{ color: '#9FA2B4', width: '208px' }}>Owner Name</TableCell>
           <TableCell sx={{ color: '#9FA2B4', width: '140px' }}>
             <TableSortLabel
@@ -91,10 +94,10 @@ function TableColView({ data }) {
             key={row.id}
             sx={{
               '&:last-child td, &:last-child th': { border: 0 },
-              backgroundColor: row.completed && (theme ? '#6D838D' : '#EBFFE5'),
+              backgroundColor: row.completed ? (theme ? '#6D838D' : '#EBFFE5') : 'white',
               cursor: 'pointer',
             }}
-            onClick={(e) => navigateToTicket(e, row.id)}
+            onClick={() => navigateToTicket(row.id)}
           >
             <TableCell sx={{ width: '440px' }} component="th" scope="row">
               <Stack direction="row">
@@ -142,11 +145,6 @@ function TableColView({ data }) {
       </TableBody>
     </Table>
   );
-}
-
-TableColView.propTypes = {
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
 };
 
 export default TableColView;

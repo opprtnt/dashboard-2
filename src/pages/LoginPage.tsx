@@ -1,14 +1,8 @@
-import { useForm, Controller } from 'react-hook-form';
-import TextField from '@mui/material/TextField';
-import Password from '../components/Password';
+import React, { FC } from 'react';
 import SubmitButton from '../components/SubmitButton';
 import '../scss/LoginPage.scss';
 
-export default function LoginPage() {
-  const { control } = useForm({
-    criteriaMode: 'all',
-  });
-
+const LoginPage: FC = () => {
   return (
     <div className="align-center-block">
       <div className="login white">
@@ -39,43 +33,13 @@ export default function LoginPage() {
         </div>
         <div className="login__title-block">
           <h1 className="login__title">Log In to Dashboard Kit</h1>
-          <p className="login__subtitle">Enter your email and password below</p>
         </div>
         <form className="form">
-          <label>Email</label>
-          <Controller
-            control={control}
-            rules={{ required: 'Обязательное поле!', maxLength: 100 }}
-            name="login"
-            defaultValue={null}
-            render={({ field }) => {
-              return (
-                <TextField
-                  sx={{ margin: '6px 0 24px' }}
-                  fullWidth
-                  required
-                  id="outlined-required"
-                  placeholder="Email address"
-                />
-              );
-            }}
-          />
-          <label>Password</label>
-          <Controller
-            control={control}
-            rules={{ required: 'Обязательное поле!', maxLength: 100 }}
-            name="pass"
-            defaultValue={null}
-            render={({ field }) => {
-              return <Password />;
-            }}
-          />
           <SubmitButton />
         </form>{' '}
-        <p className="login__sign-up">
-          Don`t have an account?<a href="/">Sign up</a>
-        </p>
       </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

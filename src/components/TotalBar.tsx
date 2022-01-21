@@ -1,5 +1,5 @@
-import { getDocs, query, where } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { CollectionReference, getDocs, query, Timestamp, where } from 'firebase/firestore';
+import React, { FC, useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import { convertDate, convertTime } from '../functions';
@@ -7,7 +7,7 @@ import { convertDate, convertTime } from '../functions';
 let dateNow = new Date();
 let dateTable = Date.now() / 1000;
 dateNow.setHours(0, 0, 0, 0);
-const period = new Date(dateNow - 14 * 24 * 60 * 60 * 1000);
+const period = new Date(dateNow.getTime() - 14 * 24 * 60 * 60 * 1000);
 
 const Diagramma = styled.div`
   margin: 30px 0;
@@ -22,16 +22,15 @@ const Diagramma = styled.div`
     font-size: 12px;
   }
 `;
-
-export default function TotalBar({ docRef }) {
+const TotalBar: FC<{ docRef: CollectionReference }> = ({ docRef }) => {
   const queryPeriod = query(docRef, where('completed', '==', true), where('date', '>', period));
-  const [dataOfPeriod, setDataOfPeriod] = useState();
-  const [dataBar, setDataBar] = useState();
+  const [dataOfPeriod, setDataOfPeriod] = useState([]);
+  const [dataBar, setDataBar] = useState([{ date: 0, Low: 0, Normal: 0, High: 0 }]);
 
   useEffect(() => {
     async function setDataPeriod() {
       const docSnap = await getDocs(queryPeriod);
-      let container = [];
+      let container: any = [];
       docSnap.forEach((v) => container.push(v.data()));
       setDataOfPeriod(container);
     }
@@ -43,15 +42,15 @@ export default function TotalBar({ docRef }) {
   }, [dataOfPeriod]);
 
   function createDataForBar() {
-    let dataBar = [];
+    let dataBar = [{ date: 0, Low: 0, Normal: 0, High: 0 }];
     for (let i = 0; i < 14; i++) {
-      let day = dateNow - i * 24 * 60 * 60 * 1000;
-      let date = new Date(day);
-      dataBar.push({ date: date.getDate(), Low: 0, Normal: 0, High: 0 });
+      let date = new Date(dateNow.getTime() - i * 24 * 60 * 60 * 1000);
+      dataBar[i] = { date: date.getDate(), Low: 0, Normal: 0, High: 0 };
     }
-    dataOfPeriod.forEach((ticket) => {
+    dataOfPeriod.forEach((ticket: { date: Timestamp, priority: number }) => {
       let date = ticket.date.toDate().getDate();
       const idx = dataBar.findIndex((v) => v.date === date);
+      if (idx === -1) return;
       if (ticket.priority === 0) dataBar[idx].Low += 1;
       if (ticket.priority === 1) dataBar[idx].Normal += 1;
       if (ticket.priority === 2) dataBar[idx].High += 1;
@@ -66,9 +65,9 @@ export default function TotalBar({ docRef }) {
         as of {convertDate(dateTable)}, {convertTime(dateTable)}
       </p>
       <ResponsiveContainer height={388} width={'100%'}>
-        <BarChart data={dataBar} align="center">
+        <BarChart data={dataBar}>
           <XAxis axisLine={false} tickLine={false} dataKey="date" reversed={true} />
-          <YAxis axisLine={false} tickLine={false} alLOwDecimals={false} />
+          <YAxis axisLine={false} tickLine={false} allowDecimals={false} />
           <Tooltip />
           <Legend
             wrapperStyle={{
@@ -86,4 +85,6 @@ export default function TotalBar({ docRef }) {
       </ResponsiveContainer>
     </Diagramma>
   );
-}
+};
+
+export default TotalBar;

@@ -3,19 +3,18 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { setFilter } from '../store/appSlice';
 import React, { ChangeEvent } from 'react';
-import { useAppDispatch, useAppSelector } from '../store';
 import { useDispatch } from 'react-redux';
+import { debounce } from '../functions';
 
 const SearchTicket: React.FC = () => {
   const dispatch = useDispatch();
-  const theme = useAppSelector((state) => state.user.themeDark);
 
   let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchItem = e.target.value;
     dispatch(setFilter(searchItem));
   };
 
-  //handleChange = debounce(handleChange, 400);
+  handleChange = debounce(handleChange, 400);
   return (
     <TextField
       sx={{

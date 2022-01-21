@@ -7,12 +7,6 @@ import styled from 'styled-components';
 import { toggleThemeDark } from '../store/appSlice';
 
 const ThemeButtons: React.FC = () => {
-  const ThemeButtons = styled.div`
-    display: flex;
-    border-right: 1px solid #dfe0eb;
-    padding: 0 32px;
-  `;
-
   const dispatch = useDispatch();
 
   const toggleTheme = (theme: boolean) => {
@@ -20,15 +14,20 @@ const ThemeButtons: React.FC = () => {
   };
 
   return (
-    <ThemeButtons className="theme-btn">
+    <ThemeButton className="theme-btn">
       <IconButton onClick={() => toggleTheme(false)}>
         <Brightness5Icon sx={{ color: '#4F4F4F' }} />
       </IconButton>
       <IconButton onClick={() => toggleTheme(true)}>
         <Brightness4Icon sx={{ color: '#BDBDBD' }} />
       </IconButton>
-    </ThemeButtons>
+    </ThemeButton>
   );
 };
+const ThemeButton = styled.div`
+  display: flex;
+  border-right: 1px solid #dfe0eb;
+  padding: 0 32px;
+`;
 
 export default ThemeButtons;

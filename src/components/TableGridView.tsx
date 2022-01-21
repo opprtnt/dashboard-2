@@ -3,23 +3,9 @@ import TicketCard from './TicketCard';
 import { useDispatch } from 'react-redux';
 import React, { FC, useEffect } from 'react';
 import { setOrderBy, setSortTable } from '../store/appSlice';
+import { ITableView } from '../interface';
 
-interface ITableGridView {
-  data: [
-    {
-      user: { uid: string, photo: string, displayName: string },
-      title: string,
-      completed: boolean,
-      id: string,
-      date: {
-        seconds: number,
-      },
-      priority: number,
-    }
-  ];
-}
-
-const TableGridView: FC<ITableGridView> = ({ data }) => {
+const TableGridView: FC<ITableView> = ({ data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {

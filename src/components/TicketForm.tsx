@@ -1,37 +1,26 @@
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { useState } from 'react';
+import React, { FC } from 'react';
 import { collection, doc, getFirestore, increment, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { addDoc } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useContext } from 'react';
-import { ContextLogin } from '../index';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import styled from 'styled-components';
+import { useAppSelector } from '../store';
+import { Button } from '../style/style';
 
-function TicketForm() {
-  const [priority, setPriority] = useState('1');
+const TicketForm: FC = () => {
   let navigate = useNavigate();
   const db = getFirestore();
-  const { auth } = useContext(ContextLogin);
-  const [user] = useAuthState(auth);
+  const user = useAppSelector((state) => state.user.userData);
   const docCount = doc(db, 'count', 'count');
 
-  const Button = styled.button`
-    margin-top: 32px;
-  `;
-
-  const handleChange = (event) => {
-    setPriority(event.target.value);
-  };
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const sendTicket = async (data) => {
+  const sendTicket = async (data: { title: string, description: string, priority: number }) => {
     const docRef = await addDoc(collection(db, 'tickets'), {
       user: {
         uid: user.uid,
@@ -39,7 +28,7 @@ function TicketForm() {
         photo: user.photoURL,
       },
       title: data.title,
-      ticket: data.description,
+      ticket: data.description || '',
       priority: data.priority,
       date: serverTimestamp(),
       completed: false,
@@ -62,7 +51,6 @@ function TicketForm() {
           render={({ field }) => {
             return (
               <TextField
-                value={''}
                 error={errors?.title?.type === 'required'}
                 label={errors?.title?.type === 'required' ? 'Обязательное поле!' : 'Ticket Title *'}
                 {...field}
@@ -76,6 +64,7 @@ function TicketForm() {
           control={control}
           name="priority"
           rules={{ required: 'Обязательное поле!' }}
+          defaultValue={''}
           render={({ field }) => {
             return (
               <FormControl>
@@ -83,14 +72,12 @@ function TicketForm() {
                   {errors?.priority?.type === 'required' ? 'Обязательное поле!' : 'Select priority *'}
                 </InputLabel>
                 <Select
-                  value={priority}
                   error={errors?.priority?.type === 'required'}
                   label={errors?.priority?.type === 'required' ? 'Обязательное поле!' : 'Select priority *'}
-                  onChange={handleChange}
                   sx={{ width: '344px' }}
                   {...field}
                 >
-                  <MenuItem value="1">
+                  <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
                   <MenuItem value={0}>Low</MenuItem>
@@ -103,7 +90,6 @@ function TicketForm() {
         />
         <Controller
           control={control}
-          rules={{ required: 'Обязательное поле!', maxLength: 100 }}
           name="description"
           render={({ field }) => {
             return (
@@ -124,7 +110,6 @@ function TicketForm() {
       <Toaster position="top-right" reverseOrder={true} />
     </div>
   );
-}
-TicketForm.propTypes = {};
+};
 
 export default TicketForm;

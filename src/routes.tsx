@@ -5,10 +5,18 @@ import { TicketPage } from './pages/TicketPage';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import TicketsPage from './pages/TicketsPage';
+import React from 'react';
 
 export const routes = {
-  homepage: { path: '/', element: <LoginPage /> },
-  elementLayot: <Layout />,
+  homepage: {
+    path: '/',
+    element: (
+      <Auth>
+        <LoginPage />
+      </Auth>
+    ),
+  },
+  elementLayout: <Layout />,
   dashboard: {
     path: 'dashboard',
     element: (
