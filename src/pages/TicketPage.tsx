@@ -25,7 +25,7 @@ const TicketPage: FC = () => {
   const user = useAppSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   const componentMounted = useRef(true);
-
+  
   useEffect(() => {
     dispatch(setTitlePage(data.title));
   }, [dispatch, data.title]);
@@ -35,7 +35,7 @@ const TicketPage: FC = () => {
       setIsUser(user.uid === data.user.uid);
       setStatus(data.completed);
     }
-  }, [setIsUser, data.title, setStatus, data.completed, user]);
+  }, [setIsUser, data.title, setStatus, data.completed, user,data.user.uid]);
 
   useEffect(() => {
     async function getTicket() {
@@ -52,7 +52,7 @@ const TicketPage: FC = () => {
     return () => {
       componentMounted.current = false;
     };
-  }, [setData]);
+  }, [setData, docRef]);
 
   const {
     control,

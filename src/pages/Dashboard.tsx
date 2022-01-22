@@ -1,5 +1,5 @@
 import { collection, getDocs, getFirestore, query, where, getDoc, doc } from 'firebase/firestore';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import TotalBar from '../components/TotalBar';
 import { useDispatch } from 'react-redux';
@@ -9,14 +9,14 @@ import { useAppSelector } from '../store';
 
 const Dashboard: FC = () => {
   const user = useAppSelector((state) => state.user.userData);
-  const [countHight, setCountHight] = useState(0);
-  const [countNormal, setCountNormal] = useState(0);
-  const [countLow, setCountLow] = useState(0);
-  const [countAll, setCountAll] = useState(0);
-  const [countAllUser, setCountAllUser] = useState(0);
-  const [countHighUser, setCountHighUser] = useState(0);
-  const [countNormalUser, setCountNormalUser] = useState(0);
-  const [countLowUser, setCountLowUser] = useState(0);
+  const [countHigh, setCountHigh] = useState<number>();
+  const [countNormal, setCountNormal] = useState<number>();
+  const [countLow, setCountLow] = useState<number>();
+  const [countAll, setCountAll] = useState<number>();
+  const [countAllUser, setCountAllUser] = useState<number>();
+  const [countHighUser, setCountHighUser] = useState<number>();
+  const [countNormalUser, setCountNormalUser] = useState<number>();
+  const [countLowUser, setCountLowUser] = useState<number>();
   const db = getFirestore();
   const docRef = collection(db, 'tickets');
   const docCount = doc(db, 'count', 'count');
@@ -42,18 +42,18 @@ const Dashboard: FC = () => {
     where('user.uid', '==', user.uid)
   );
  const queryAllTicketUser = query(docRef, where('user.uid', '==', user.uid));
-  const totalUncompletedPrecent = Math.round((100 / countAll) * (countNormal + countLow + countHight));
+  const totalUncompletedPrecent = Math.round((100 / countAll!) * (countNormal! + countLow! + countHigh!));
   const totalUncompletedUserPrecent = Math.round(
-    (100 / countAllUser) * (countNormalUser + countLowUser + countHighUser)
+    (100 / countAllUser!) * (countNormalUser! + countLowUser! + countHighUser!)
   );
-  //const componentMounted = useRef(true);
 
 
   useEffect(() => {
-    async function setValueForCards() {
+    let isMounted = true;  
+    async function setValueForCards() { 
       if (user) {
         const docSnapQueryHigh = await getDocs(queryHigh);
-        setCountHight(docSnapQueryHigh.docs.length);
+        setCountHigh(docSnapQueryHigh.docs.length);
         const docSnapQueryNormal = await getDocs(queryNormal);
         setCountNormal(docSnapQueryNormal.docs.length);
         const docSnap = await getDocs(queryLow);
@@ -70,8 +70,9 @@ const Dashboard: FC = () => {
         setCountAllUser(allTicketUserSnap.docs.length);
       }
     }
-    setValueForCards();
-    //return () => (componentMounted.current = false);
+    if (isMounted){
+    setValueForCards()}
+    return () => {isMounted = false};
   }, [user]);
 
   const dispatch = useDispatch();
@@ -79,13 +80,15 @@ const Dashboard: FC = () => {
     dispatch(setTitlePage('Dashboard'));
   }, [dispatch]);
 
+if(countHigh===undefined||countLow===undefined||countNormal===undefined||countHighUser===undefined||countLowUser===undefined||countNormalUser===undefined) return <div className="container"><Loader/></div>
+
   return (
     <div className="container">
       <div className="container__content">
         <div className="row">
           <DashboardCard className="white">
             <h3 className="gray">Total High</h3>
-            <div className="count">{countHight}</div>
+            <div className="count">{countHigh}</div>
           </DashboardCard>
           <DashboardCard className="white">
             <h3 className="gray">Total Normal</h3>
@@ -98,7 +101,7 @@ const Dashboard: FC = () => {
           <DashboardCard className="white">
             <h3 className="gray">Total Uncompleted</h3>
             <div className="count">
-              {countNormal + countLow + countHight}
+              {countNormal + countLow + countHigh}
               {Number.isFinite(totalUncompletedPrecent)&&<span className="precent">{totalUncompletedPrecent}%</span>}
             </div>
           </DashboardCard>

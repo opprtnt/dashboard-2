@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAppSelector } from '../store';
 import { Button } from '../style/style';
+import styled from 'styled-components';
 
 const TicketForm: FC = () => {
   let navigate = useNavigate();
@@ -48,6 +49,7 @@ const TicketForm: FC = () => {
           control={control}
           rules={{ required: 'Обязательное поле!', maxLength: 50 }}
           name="title"
+          defaultValue={''}
           render={({ field }) => {
             return (
               <TextField
@@ -91,6 +93,7 @@ const TicketForm: FC = () => {
         <Controller
           control={control}
           name="description"
+          defaultValue={''}
           render={({ field }) => {
             return (
               <TextField
@@ -103,13 +106,18 @@ const TicketForm: FC = () => {
           }}
         />
 
-        <Button className="btn-primary primary" type="submit">
+        <ButtonTicketForm className="btn-primary primary" type="submit">
           Save Details
-        </Button>
+        </ButtonTicketForm>
       </form>
       <Toaster position="top-right" reverseOrder={true} />
     </div>
   );
 };
+
+const ButtonTicketForm = styled(Button)`
+  margin-top: 32px;
+  margin-left: 0;
+`;
 
 export default TicketForm;

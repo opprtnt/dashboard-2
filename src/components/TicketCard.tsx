@@ -1,9 +1,8 @@
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { convertDate, convertTime, getLastUpdate } from '../functions';
 import { Avatar, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteTicketButton from './DeleteTicketButton';
-import { useAppSelector } from '../store';
 import React, { FC } from 'react';
 import { TicketCardProps, ICard } from '../interface';
 
@@ -11,20 +10,21 @@ const Card =
   styled.div <
   ICard >
   `
-  box-shadow: ${({ themeI }) => (themeI ? '0px 0px 10px #4d5254' : '0px 0px 10px #616473')};
+  box-shadow: ${({ theme }) => theme.colors.shadow} ;
   border-radius: 4px;
   cursor: pointer;
   margin: 0px 10px 10px 0;
-  width: 19.9%;
+  width: 24.2%;
   padding: 16px 22px;
-  background-color: ${({ completed }) => (completed ? ({ themeI }) => (themeI ? '#6D838D' : '#EBFFE5') : 'white')};
+  background-color: ${({ completed }) =>
+    completed ? ({ theme }) => theme.colors.completed : ({ theme }) => theme.colors.cardBg};
 
   &:nth-of-type(4n) {
     margin-right: 0;
   }
 
   @media (max-width: 1440px) {
-    width: 28%;
+    width: 32.5%;
     &:nth-of-type(3n) {
       margin-right: 0;
     }
@@ -51,19 +51,14 @@ const Card =
 `;
 
 const TicketCard: FC<TicketCardProps> = ({ ticketData }) => {
-  const theme = useAppSelector((state) => state.user.themeDark);
   let navigate = useNavigate();
+  let theme = useTheme();
   const navigateToTicket = (id: string) => {
     navigate(`/tickets/${id}`);
   };
 
   return (
-    <Card
-      themeI={theme}
-      completed={ticketData.completed}
-      onClick={() => navigateToTicket(ticketData.id)}
-      className="ticket-card"
-    >
+    <Card theme={theme} completed={ticketData.completed} onClick={() => navigateToTicket(ticketData.id)}>
       <div className="ticket-card__row">
         <div className="ticket-card__date">
           <p className="table__text-cell">{convertDate(ticketData.date.seconds)}</p>

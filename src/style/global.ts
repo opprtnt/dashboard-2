@@ -1,16 +1,18 @@
-@use './colors';
-@import './fonts.scss';
+import { createGlobalStyle } from 'styled-components';
+import '../scss/fonts.scss';
+import { baseTheme } from './theme';
 
+export default createGlobalStyle`
 *{
-  margin: 0;
+  margin: 0;  
   padding: 0;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 body{
   font-family: 'Mulish', sans-serif;
   font-size: 14px;
   overflow-x: hidden;
-  @media (max-width: 900px) {
+  @media ${baseTheme.media.medium} {
     overflow-x: scroll;
   }
   
@@ -29,41 +31,17 @@ a{
     color: inherit;
   }
 }
-.lds-dual-ring {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  margin: calc(50vh - 80px) calc(50vw - 40px) calc(50vh - 40px) calc(50vw + 127px - 40px);
-}
-.lds-dual-ring:after {
-  content: " ";
-  display: block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border-radius: 50%;
-  border: 6px solid rgba(56, 12, 56, 0.171);
-  border-color: rgb(65, 57, 65) transparent rgb(68, 65, 68) transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
-@keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+
 .container{
-  margin-left: 255px;
+  margin-left: ${baseTheme.sizes.navWidth};
   padding: 30px;
   
   &__content{
-    max-width: 1122px;
+    max-width: ${baseTheme.sizes.container};
     margin: auto;
   }
-  @media (max-width: 1280px) {
-    margin-left: 76px;
+  @media ${baseTheme.media.large} {
+    margin-left: ${baseTheme.sizes.navWidthSmall};
   }
   
 }
@@ -99,3 +77,7 @@ button{
   }
 }
 
+
+
+
+`;

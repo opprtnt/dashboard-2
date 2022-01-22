@@ -40,5 +40,4 @@ export interface TicketCardProps {
 
 export interface ICard {
   completed: boolean;
-  themeI: boolean;
 }

@@ -17,6 +17,7 @@ import { FC } from 'react';
 import { ITableView } from '../interface';
 import { useAppSelector } from '../store';
 import React from 'react';
+import { baseTheme } from '../style/theme';
 
 const headCells = [
   {
@@ -94,7 +95,13 @@ const TableColView: FC<ITableView> = ({ data }) => {
             key={row.id}
             sx={{
               '&:last-child td, &:last-child th': { border: 0 },
-              backgroundColor: row.completed ? (theme ? '#6D838D' : '#EBFFE5') : 'white',
+              backgroundColor: row.completed
+                ? theme
+                  ? '#6D838D'
+                  : '#EBFFE5'
+                : theme
+                ? baseTheme.colors.mediumGray
+                : 'white',
               cursor: 'pointer',
             }}
             onClick={() => navigateToTicket(row.id)}
