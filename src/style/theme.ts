@@ -1,16 +1,20 @@
 import { DefaultTheme } from 'styled-components';
+import { ITheme } from '../interface';
 
 export const baseTheme = {
   colors: {
     primary: '#2F80ED',
-    bgCardWhite: 'white',
     white: 'white',
     black: '#252733',
     superBlack: '#0C0F21',
     lightGray1: '#f7f8fc',
     lightGray2: '#DFE0EB',
+    lightGray3: '#c5c7cd',
     green: '#27AE60',
     mediumGray: '#7A7E99',
+    high:'#EB5757',
+    normal:'#29CC97',
+    low:'#F2C94C'
   },
   media: {
     extraLarge: '(max-width: 1440px)',
@@ -45,7 +49,7 @@ export const darkTheme: DefaultTheme = {
   colors: {
     ...baseTheme.colors,
     font: 'white',
-    headColor: 'white',
+    headColor: '#bdbdbd',
     bg: '#252733',
     contentBg: '#7A7E99',
     primaryBtn: '#8AB7F6',
@@ -55,3 +59,7 @@ export const darkTheme: DefaultTheme = {
     shadow: '0px 0px 10px #4d5254',
   },
 };
+
+declare module 'styled-components' {
+  export interface DefaultTheme extends ITheme {}
+}

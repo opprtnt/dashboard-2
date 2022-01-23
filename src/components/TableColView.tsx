@@ -11,13 +11,12 @@ import Stack from '@mui/material/Stack';
 import { useDispatch } from 'react-redux';
 import { convertDate, convertTime, getLastUpdate } from '../functions';
 import DeleteTicketButton from './DeleteTicketButton';
-import '../scss/TicketsPage.scss';
 import { setSortTable, setOrderBy } from '../store/appSlice';
 import { FC } from 'react';
 import { ITableView } from '../interface';
-import { useAppSelector } from '../store';
 import React from 'react';
 import { baseTheme } from '../style/theme';
+import styled, { useTheme } from 'styled-components';
 
 const headCells = [
   {
@@ -32,8 +31,8 @@ const headCells = [
 
 const TableColView: FC<ITableView> = ({ data }) => {
   let navigate = useNavigate();
-  const theme = useAppSelector((state) => state.user.themeDark);
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const navigateToTicket = (id: string) => {
     navigate(`/tickets/${id}`);
@@ -66,20 +65,20 @@ const TableColView: FC<ITableView> = ({ data }) => {
     <Table sx={{ maxWidth: '1122px', fontWeight: '600' }}>
       <TableHead>
         <TableRow>
-          <TableCell sx={{ color: theme ? '#bdbdbd' : '#9FA2B4', width: '440px' }}>Ticket Details</TableCell>
-          <TableCell sx={{ color: '#9FA2B4', width: '208px' }}>Owner Name</TableCell>
-          <TableCell sx={{ color: '#9FA2B4', width: '140px' }}>
+          <TableCell sx={{ color: theme.colors.headColor, width: '440px' }}>Ticket Details</TableCell>
+          <TableCell sx={{ color: theme.colors.headColor, width: '208px' }}>Owner Name</TableCell>
+          <TableCell sx={{ color: theme.colors.headColor, width: '140px' }}>
             <TableSortLabel
-              //active={orderB === headCells[0].id}
+              active={'asc' === headCells[0].sort}
               direction={headCells[0].sort === 'asc' ? 'desc' : 'asc'}
               onClick={sortDate}
             >
               {headCells[0].label}
             </TableSortLabel>
           </TableCell>
-          <TableCell sx={{ color: '#9FA2B4', width: '104px' }}>
+          <TableCell sx={{ color: theme.colors.headColor, width: '104px' }}>
             <TableSortLabel
-              //active={orderB === headCells[1].id}
+              active={'asc' === headCells[1].sort}
               direction={headCells[1].sort === 'asc' ? 'desc' : 'asc'}
               onClick={sortPriority}
             >
@@ -95,13 +94,7 @@ const TableColView: FC<ITableView> = ({ data }) => {
             key={row.id}
             sx={{
               '&:last-child td, &:last-child th': { border: 0 },
-              backgroundColor: row.completed
-                ? theme
-                  ? '#6D838D'
-                  : '#EBFFE5'
-                : theme
-                ? baseTheme.colors.mediumGray
-                : 'white',
+              backgroundColor: row.completed ? theme.colors.completed : theme.colors.contentBg,
               cursor: 'pointer',
             }}
             onClick={() => navigateToTicket(row.id)}
@@ -111,17 +104,19 @@ const TableColView: FC<ITableView> = ({ data }) => {
                 {' '}
                 <Avatar sx={{ marginRight: '24px' }} alt={row.user.displayName} src={row.user.photo} />
                 <div>
-                  <p className="table__text-cell text-color">{row.title}</p>
-                  <p className="table__subtext-cell gray">{getLastUpdate(Date.now() / 1000 - row.date.seconds)}</p>
+                  <TableCellTitle className="text-color">{row.title}</TableCellTitle>
+                  <TableCellSubtitle className="gray">
+                    {getLastUpdate(Date.now() / 1000 - row.date.seconds)}
+                  </TableCellSubtitle>
                 </div>
               </Stack>
             </TableCell>
             <TableCell className="text-color" sx={{ width: '208px' }}>
-              <p className="table__text-cell text-color">{row.user.displayName}</p>
+              <TableCellTitle className="table__text-cell text-color">{row.user.displayName}</TableCellTitle>
             </TableCell>
             <TableCell className="text-color" sx={{ width: '140px' }}>
-              <p className="table__text-cell text-color">{convertDate(row.date.seconds)}</p>
-              <p className="table__subtext-cell">{convertTime(row.date.seconds)}</p>
+              <TableCellTitle className="text-color">{convertDate(row.date.seconds)}</TableCellTitle>
+              <TableCellSubtitle>{convertTime(row.date.seconds)}</TableCellSubtitle>
             </TableCell>
             <TableCell sx={{ width: '104px' }}>
               <Chip
@@ -129,18 +124,17 @@ const TableColView: FC<ITableView> = ({ data }) => {
                   textTransform: 'uppercase',
                   color: 'white',
                   fontWeight: 'bold',
+                  backgroundColor:
+                    row.priority === 0
+                      ? theme.colors.low
+                      : row.priority === 1
+                      ? theme.colors.normal
+                      : row.priority === 2
+                      ? theme.colors.high
+                      : theme.colors.lightGray1,
                 }}
                 label={
                   row.priority === 0 ? 'Low' : row.priority === 1 ? 'Normal' : row.priority === 2 ? 'Hight' : 'None'
-                }
-                color={
-                  row.priority === 0
-                    ? 'primary'
-                    : row.priority === 1
-                    ? 'success'
-                    : row.priority === 2
-                    ? 'error'
-                    : 'default'
                 }
               />
             </TableCell>
@@ -153,5 +147,14 @@ const TableColView: FC<ITableView> = ({ data }) => {
     </Table>
   );
 };
+
+const TableCellTitle = styled.p`
+  font-weight: 600;
+`;
+const TableCellSubtitle = styled.p`
+  color: ${baseTheme.colors.lightGray3};
+  margin-top: 4px;
+  font-size: 12px;
+`;
 
 export default TableColView;

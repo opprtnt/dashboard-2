@@ -6,6 +6,63 @@ import DeleteTicketButton from './DeleteTicketButton';
 import React, { FC } from 'react';
 import { TicketCardProps, ICard } from '../interface';
 
+const TicketCard: FC<TicketCardProps> = ({ ticketData }) => {
+  let navigate = useNavigate();
+  let theme = useTheme();
+  const navigateToTicket = (id: string) => {
+    navigate(`/tickets/${id}`);
+  };
+
+  return (
+    <Card theme={theme} completed={ticketData.completed} onClick={() => navigateToTicket(ticketData.id)}>
+      <div className="ticket-card__row">
+        <div className="ticket-card__date">
+          <p className="table__text-cell">{convertDate(ticketData.date.seconds)}</p>
+          <p className="table__subtext-cell">{convertTime(ticketData.date.seconds)}</p>
+        </div>
+        <Chip
+          sx={{
+            textTransform: 'uppercase',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '11px',
+            height: '24px',
+            backgroundColor:
+              ticketData.priority === 0
+                ? theme.colors.low
+                : ticketData.priority === 1
+                ? theme.colors.normal
+                : ticketData.priority === 2
+                ? theme.colors.high
+                : theme.colors.lightGray1,
+          }}
+          label={
+            ticketData.priority === 0
+              ? 'Low'
+              : ticketData.priority === 1
+              ? 'Normal'
+              : ticketData.priority === 2
+              ? 'Hight'
+              : 'None'
+          }
+        />
+        <DeleteTicketButton rowUserUid={ticketData.user.uid} id={ticketData.id} completed={ticketData.completed} />
+      </div>
+      <p className="table__text-cell">{ticketData.title}</p>
+      <p className="table__subtext-cell">{getLastUpdate(Date.now() / 1000 - ticketData.date.seconds)}</p>
+      <div className="row">
+        <Avatar
+          sx={{
+            marginRight: '24px',
+          }}
+          src={ticketData.user.photo}
+        ></Avatar>
+        <span className="table__text-cell">{ticketData.user.displayName}</span>
+      </div>
+    </Card>
+  );
+};
+
 const Card =
   styled.div <
   ICard >
@@ -49,63 +106,5 @@ const Card =
     margin-bottom: 16px;
   }
 `;
-
-const TicketCard: FC<TicketCardProps> = ({ ticketData }) => {
-  let navigate = useNavigate();
-  let theme = useTheme();
-  const navigateToTicket = (id: string) => {
-    navigate(`/tickets/${id}`);
-  };
-
-  return (
-    <Card theme={theme} completed={ticketData.completed} onClick={() => navigateToTicket(ticketData.id)}>
-      <div className="ticket-card__row">
-        <div className="ticket-card__date">
-          <p className="table__text-cell">{convertDate(ticketData.date.seconds)}</p>
-          <p className="table__subtext-cell">{convertTime(ticketData.date.seconds)}</p>
-        </div>
-        <Chip
-          sx={{
-            textTransform: 'uppercase',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '11px',
-            height: '24px',
-          }}
-          label={
-            ticketData.priority === 0
-              ? 'Low'
-              : ticketData.priority === 1
-              ? 'Normal'
-              : ticketData.priority === 2
-              ? 'Hight'
-              : 'None'
-          }
-          color={
-            ticketData.priority === 0
-              ? 'primary'
-              : ticketData.priority === 1
-              ? 'success'
-              : ticketData.priority === 2
-              ? 'error'
-              : 'default'
-          }
-        />
-        <DeleteTicketButton rowUserUid={ticketData.user.uid} id={ticketData.id} completed={ticketData.completed} />
-      </div>
-      <p className="table__text-cell">{ticketData.title}</p>
-      <p className="table__subtext-cell">{getLastUpdate(Date.now() / 1000 - ticketData.date.seconds)}</p>
-      <div className="row">
-        <Avatar
-          sx={{
-            marginRight: '24px',
-          }}
-          src={ticketData.user.photo}
-        ></Avatar>
-        <span className="table__text-cell">{ticketData.user.displayName}</span>
-      </div>
-    </Card>
-  );
-};
 
 export default TicketCard;

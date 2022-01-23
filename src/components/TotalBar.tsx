@@ -1,7 +1,7 @@
 import { CollectionReference, getDocs, query, Timestamp, where } from 'firebase/firestore';
 import React, { FC, useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { convertDate, convertTime } from '../functions';
 
 let dateNow = new Date();
@@ -9,23 +9,11 @@ let dateTable = Date.now() / 1000;
 dateNow.setHours(0, 0, 0, 0);
 const period = new Date(dateNow.getTime() - 14 * 24 * 60 * 60 * 1000);
 
-const Diagramma = styled.div`
-  margin: 30px 0;
-  border: 1px solid #dfe0eb;
-  border-radius: 8px;
-  padding: 32px 64px 32px 32px;
-  h3 {
-    margin-bottom: 8px;
-  }
-  p {
-    margin-bottom: 72px;
-    font-size: 12px;
-  }
-`;
 const TotalBar: FC<{ docRef: CollectionReference }> = ({ docRef }) => {
   const queryPeriod = query(docRef, where('completed', '==', true), where('date', '>', period));
   const [dataOfPeriod, setDataOfPeriod] = useState([]);
   const [dataBar, setDataBar] = useState([{ date: 0, Low: 0, Normal: 0, High: 0 }]);
+  const theme = useTheme();
 
   useEffect(() => {
     async function setDataPeriod() {
@@ -78,13 +66,26 @@ const TotalBar: FC<{ docRef: CollectionReference }> = ({ docRef }) => {
             iconType={'circle'}
             align="left"
           />
-          <Bar stackId="pv" barSize={18.35} dataKey="High" fill="#EB5757" />
-          <Bar stackId="pv" barSize={18.35} dataKey="Normal" fill="#29CC97" />
-          <Bar stackId="pv" barSize={18.35} dataKey="Low" fill="#F2C94C" />
+          <Bar stackId="pv" barSize={18.35} dataKey="High" fill={theme.colors.high} />
+          <Bar stackId="pv" barSize={18.35} dataKey="Normal" fill={theme.colors.normal} />
+          <Bar stackId="pv" barSize={18.35} dataKey="Low" fill={theme.colors.low} />
         </BarChart>
       </ResponsiveContainer>
     </Diagramma>
   );
 };
+const Diagramma = styled.div`
+  margin: 30px 0;
+  border: 1px solid ${({theme})=>theme.colors.border};
+  border-radius: 8px;
+  padding: 32px 64px 32px 32px;
+  h3 {
+    margin-bottom: 8px;
+  }
+  p {
+    margin-bottom: 72px;
+    font-size: 12px;
+  }
+`;
 
 export default TotalBar;

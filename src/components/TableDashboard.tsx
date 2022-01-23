@@ -2,7 +2,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import React, { useState, useEffect, FC, ChangeEvent, MouseEvent } from 'react';
 import Loader from './Loader';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ToolbarS from './TableToolbar';
 import TableColView from './TableColView';
 import TableGridView from './TableGridView';
@@ -22,14 +21,6 @@ import {
 } from 'firebase/firestore';
 import { setData } from '../store/appSlice';
 import { useAppSelector } from '../store';
-
-const theme = createTheme({
-  palette: {
-    primary: { main: '#F2C94C ' },
-    success: { main: '#29CC97' },
-    error: { main: '#F12B2C' },
-  },
-});
 
 const TableDashboard: FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(8);
@@ -176,17 +167,13 @@ const TableDashboard: FC = () => {
 
   if (!data) return <Loader />;
   return (
-    <ThemeProvider theme={theme}>
       <TableContainer
         className="white"
         sx={{ maxWidth: '1122px', padding: '27px 0', minHeight: '60vh', borderRadius: '8px' }}
       >
         <ToolbarS />
         {viewTable && <TableColView data={data} />}
-        {!viewTable && <TableGridView data={data} />}
-      </TableContainer>
-
-      <TablePagination
+        {!viewTable && <TableGridView data={data} />}<TablePagination
         rowsPerPageOptions={[8, 16, 50]}
         component="div"
         count={dataLength}
@@ -196,7 +183,8 @@ const TableDashboard: FC = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         className="text-color"
       />
-    </ThemeProvider>
+      </TableContainer>
+
   );
 };
 

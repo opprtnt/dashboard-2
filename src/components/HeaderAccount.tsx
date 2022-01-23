@@ -1,4 +1,3 @@
-import '../scss/HeaderAccount.scss';
 import SearchTicket from './SearchTicket';
 import { Avatar } from '@mui/material';
 import React, { useEffect, useState, FC } from 'react';
@@ -6,13 +5,6 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import ThemeButtons from './ThemeButtons';
 import { useAppSelector } from '../store';
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-`;
 
 const HeaderAccount: FC = () => {
   const user = useAppSelector((state) => state.user.userData);
@@ -35,14 +27,31 @@ const HeaderAccount: FC = () => {
         <Header>
           <h1>{title}</h1>
           {visibleSearch && <SearchTicket />}
-          <div className="account row">
+          <Account>
             <ThemeButtons />
-            <span className="account__name">{userName}</span>
+            <UserName>{userName}</UserName>
             <Avatar src={userAvatar} />
-          </div>
+          </Account>
         </Header>
       </div>
     </div>
   );
 };
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+`;
+
+const Account = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const UserName = styled.span`
+  margin: 0 14px 0 32px;
+  font-weight: 600;
+`;
 export default HeaderAccount;

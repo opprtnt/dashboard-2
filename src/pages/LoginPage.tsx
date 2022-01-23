@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
+import styled from 'styled-components';
 import SubmitButton from '../components/SubmitButton';
-import '../scss/LoginPage.scss';
 
 const LoginPage: FC = () => {
   return (
-    <div className="align-center-block">
-      <div className="login white">
-        <div className="login__header">
-          <div className="login__logo">
+    <Wrapper>
+      <LoginWindow className="white">
+        <LoginHeader>
+          <Logo>
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="24" cy="24" r="24" fill="#3751FF" />
               <path
@@ -28,18 +28,44 @@ const LoginPage: FC = () => {
                 </linearGradient>
               </defs>
             </svg>
-          </div>
-          <h3 className="login__logo-title gray">Dashboard Kit</h3>
-        </div>
-        <div className="login__title-block">
-          <h1 className="login__title">Log In to Dashboard Kit</h1>
-        </div>
-        <form className="form">
+          </Logo>
+          <h3 className="gray">Dashboard Kit</h3>
+        </LoginHeader>
+        <LoginTitle>Log In to Dashboard Kit</LoginTitle>
+        <form>
           <SubmitButton />
         </form>{' '}
-      </div>
-    </div>
+      </LoginWindow>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: #363740;
+  align-items: center;
+`;
+
+const LoginWindow = styled.div`
+  width: 380px;
+  margin: auto;
+  text-align: center;
+  padding: 40px 32px;
+  border-radius: 8px;
+`;
+
+const LoginTitle = styled.h1`
+  margin-bottom: 12px;
+`;
+
+const Logo = styled.div`
+  margin-bottom: 12px;
+`;
+
+const LoginHeader = styled.div`
+  margin-bottom: 32px;
+`;
 
 export default LoginPage;

@@ -1,11 +1,12 @@
-import { collection, getDocs, getFirestore, query, where, getDoc, doc } from 'firebase/firestore';
-import React, { FC, useEffect, useState } from 'react';
+import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import TotalBar from '../components/TotalBar';
 import { useDispatch } from 'react-redux';
 import { setTitlePage } from '../store/appSlice';
 import { DashboardCard } from '../style/style';
 import { useAppSelector } from '../store';
+import { ContextLogin } from '..';
 
 const Dashboard: FC = () => {
   const user = useAppSelector((state) => state.user.userData);
@@ -17,31 +18,31 @@ const Dashboard: FC = () => {
   const [countHighUser, setCountHighUser] = useState<number>();
   const [countNormalUser, setCountNormalUser] = useState<number>();
   const [countLowUser, setCountLowUser] = useState<number>();
-  const db = getFirestore();
+  const {db} = useContext(ContextLogin);
   const docRef = collection(db, 'tickets');
   const docCount = doc(db, 'count', 'count');
   const queryHigh = query(docRef, where('priority', '==', 2), where('completed', '==', false));
   const queryNormal = query(docRef, where('priority', '==', 1), where('completed', '==', false));
   const queryLow = query(docRef, where('priority', '==', 0), where('completed', '==', false));
- const queryHighUser = query(
+  const queryHighUser = query(
     docRef,
     where('priority', '==', 2),
     where('completed', '==', false),
     where('user.uid', '==', user.uid)
   );
- const queryNormalUser = query(
+  const queryNormalUser = query(
     docRef,
     where('priority', '==', 1),
     where('completed', '==', false),
     where('user.uid', '==', user.uid)
   );
- const queryLowUser = query(
+  const queryLowUser = query(
     docRef,
     where('priority', '==', 0),
     where('completed', '==', false),
     where('user.uid', '==', user.uid)
   );
- const queryAllTicketUser = query(docRef, where('user.uid', '==', user.uid));
+  const queryAllTicketUser = query(docRef, where('user.uid', '==', user.uid));
   const totalUncompletedPrecent = Math.round((100 / countAll!) * (countNormal! + countLow! + countHigh!));
   const totalUncompletedUserPrecent = Math.round(
     (100 / countAllUser!) * (countNormalUser! + countLowUser! + countHighUser!)
