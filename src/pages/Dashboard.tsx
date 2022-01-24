@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, getDoc, doc, Query } from 'firebase/firestore';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import TotalBar from '../components/TotalBar';
@@ -7,6 +7,8 @@ import { setTitlePage } from '../store/appSlice';
 import { DashboardCard } from '../style/style';
 import { useAppSelector } from '../store';
 import { ContextLogin } from '..';
+
+type setCount = React.Dispatch<React.SetStateAction<number | undefined>>;
 
 const Dashboard: FC = () => {
   const user = useAppSelector((state) => state.user.userData);
@@ -19,62 +21,59 @@ const Dashboard: FC = () => {
   const [countNormalUser, setCountNormalUser] = useState<number>();
   const [countLowUser, setCountLowUser] = useState<number>();
   const {db} = useContext(ContextLogin);
-  const docRef = collection(db, 'tickets');
-  const docCount = doc(db, 'count', 'count');
-  const queryHigh = query(docRef, where('priority', '==', 2), where('completed', '==', false));
-  const queryNormal = query(docRef, where('priority', '==', 1), where('completed', '==', false));
-  const queryLow = query(docRef, where('priority', '==', 0), where('completed', '==', false));
-  const queryHighUser = query(
-    docRef,
-    where('priority', '==', 2),
-    where('completed', '==', false),
-    where('user.uid', '==', user.uid)
-  );
-  const queryNormalUser = query(
-    docRef,
-    where('priority', '==', 1),
-    where('completed', '==', false),
-    where('user.uid', '==', user.uid)
-  );
-  const queryLowUser = query(
-    docRef,
-    where('priority', '==', 0),
-    where('completed', '==', false),
-    where('user.uid', '==', user.uid)
-  );
-  const queryAllTicketUser = query(docRef, where('user.uid', '==', user.uid));
+
   const totalUncompletedPrecent = Math.round((100 / countAll!) * (countNormal! + countLow! + countHigh!));
   const totalUncompletedUserPrecent = Math.round(
     (100 / countAllUser!) * (countNormalUser! + countLowUser! + countHighUser!)
   );
 
-
   useEffect(() => {
-    let isMounted = true;  
-    async function setValueForCards() { 
-      if (user) {
-        const docSnapQueryHigh = await getDocs(queryHigh);
-        setCountHigh(docSnapQueryHigh.docs.length);
-        const docSnapQueryNormal = await getDocs(queryNormal);
-        setCountNormal(docSnapQueryNormal.docs.length);
-        const docSnap = await getDocs(queryLow);
-        setCountLow(docSnap.docs.length);
-        const allTicketSnap = await getDoc(docCount);
-        setCountAll(allTicketSnap.data()!.count);
-        const highUserSnap = await getDocs(queryHighUser);
-        setCountHighUser(highUserSnap.docs.length);
-        const normalUserSnap = await getDocs(queryNormalUser);
-        setCountNormalUser(normalUserSnap.docs.length);
-        const lowUserSnap = await getDocs(queryLowUser);
-        setCountLowUser(lowUserSnap.docs.length);
-        const allTicketUserSnap = await getDocs(queryAllTicketUser);
-        setCountAllUser(allTicketUserSnap.docs.length);
-      }
+    let isMounted = true; 
+    const docRef = collection(db, 'tickets'); 
+    async function setValueForCards(query:Query, setCountFunc:setCount) { 
+        const docSnap = await getDocs(query);
+        setCountFunc(docSnap.docs.length);
     }
-    if (isMounted){
-    setValueForCards()}
+    async function setDocumentCount() {
+      const docCount = doc(db, 'count', 'count');
+      const allTicketSnap = await getDoc(docCount);
+      setCountAll(allTicketSnap.data()!.count);
+    }
+
+    if (isMounted&&user){
+      const queryHigh = query(docRef, where('priority', '==', 2), where('completed', '==', false));
+      const queryNormal = query(docRef, where('priority', '==', 1), where('completed', '==', false));
+      const queryLow = query(docRef, where('priority', '==', 0), where('completed', '==', false));
+      const queryHighUser = query(
+        docRef,
+        where('priority', '==', 2),
+        where('completed', '==', false),
+        where('user.uid', '==', user.uid)
+      );
+      const queryNormalUser = query(
+        docRef,
+        where('priority', '==', 1),
+        where('completed', '==', false),
+        where('user.uid', '==', user.uid)
+      );
+      const queryLowUser = query(
+        docRef,
+        where('priority', '==', 0),
+        where('completed', '==', false),
+        where('user.uid', '==', user.uid)
+      );
+      const queryAllTicketUser = query(docRef, where('user.uid', '==', user.uid));
+    setValueForCards(queryHigh, setCountHigh);
+    setValueForCards(queryNormal, setCountNormal);
+    setValueForCards(queryLow, setCountLow);
+    setValueForCards(queryNormalUser, setCountNormalUser);
+    setValueForCards(queryHighUser, setCountHighUser);
+    setValueForCards(queryLowUser, setCountLowUser);
+    setValueForCards(queryAllTicketUser, setCountAllUser);
+    setDocumentCount();
+  }
     return () => {isMounted = false};
-  }, [user]);
+  }, [user, db]);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -107,7 +106,7 @@ if(countHigh===undefined||countLow===undefined||countNormal===undefined||countHi
             </div>
           </DashboardCard>
         </div>
-        <TotalBar docRef={docRef} />
+        <TotalBar/>
         <div className="row">
           <DashboardCard className="white">
             <h3 className="gray">High</h3>
