@@ -80,7 +80,7 @@ const Card =
     margin-right: 0;
   }
 
-  @media (max-width: 1440px) {
+  @media (${({ theme }) => theme.media.extraLarge}) {
     width: 32.5%;
     &:nth-of-type(3n) {
       margin-right: 0;

@@ -1,4 +1,4 @@
-import TableDashboard from '../components/TableDashboard';
+import TableTickets from '../components/TableTickets';
 import { useDispatch } from 'react-redux';
 import { setTitlePage } from '../store/appSlice';
 import React, { useEffect, FC } from 'react';
@@ -14,7 +14,7 @@ const TicketsPage: FC = () => {
     <div className="container">
       <div className="container__content">
         {' '}
-        <TableDashboard />
+        <TableTickets />
       </div>
     </div>
   );

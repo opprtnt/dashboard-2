@@ -6,7 +6,6 @@ import { addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAppSelector } from '../store';
-import { Button } from '../style/style';
 import styled from 'styled-components';
 
 const TicketForm: FC = () => {
@@ -115,7 +114,7 @@ const TicketForm: FC = () => {
   );
 };
 
-const ButtonTicketForm = styled(Button)`
+const ButtonTicketForm = styled.button`
   margin-top: 32px;
   margin-left: 0;
 `;

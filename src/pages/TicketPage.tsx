@@ -190,7 +190,7 @@ export { TicketPage };
 
 const Button = styled.button<{yellow?:boolean, red?:boolean}>`
   margin-top: 32px;
-  background: ${({yellow, red}) => (yellow ? '#F2C94C' : red ? '#EB5757' : '#2f80ed')};
+  background: ${({yellow, red}) => (yellow ? ({ theme }) => theme.colors.low : red ? ({ theme }) => theme.colors.high : ({ theme }) => theme.colors.primary)};
   color: white;
   font-weight: 600;
   font-size: 14px;

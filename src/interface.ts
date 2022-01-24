@@ -51,8 +51,10 @@ export interface ITheme {
     lightGray1: string,
     lightGray2: string,
     lightGray3: string,
+    lightGray4: string,
     green: string,
-    mediumGray: string,
+    mediumGray1: string,
+    mediumGray2: string,
     completed: string,
     bg: string,
     font: string,
@@ -65,6 +67,9 @@ export interface ITheme {
     high: string,
     low: string,
     normal: string,
+    bgNav: string,
+    activeNavFont: string,
+    activeNavBg: string,
   };
   media: {
     extraLarge: string,

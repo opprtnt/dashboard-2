@@ -15,7 +15,6 @@ import { setSortTable, setOrderBy } from '../store/appSlice';
 import { FC } from 'react';
 import { ITableView } from '../interface';
 import React from 'react';
-import { baseTheme } from '../style/theme';
 import styled, { useTheme } from 'styled-components';
 
 const headCells = [
@@ -152,7 +151,7 @@ const TableCellTitle = styled.p`
   font-weight: 600;
 `;
 const TableCellSubtitle = styled.p`
-  color: ${baseTheme.colors.lightGray3};
+  color: ${({theme})=>theme.colors.lightGray3};
   margin-top: 4px;
   font-size: 12px;
 `;

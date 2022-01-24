@@ -25,7 +25,7 @@ const SubmitButton: FC = () => {
   return <Button onClick={(e) => login(e)}>Login with Google</Button>;
 };
 const Button = styled.button`
-  background: #3751ff;
+  background: ${({ theme }) => theme.colors.primaryBtn};
   color: white;
   width: 100%;
   font-weight: 600;

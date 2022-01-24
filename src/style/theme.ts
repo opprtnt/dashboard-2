@@ -10,11 +10,16 @@ export const baseTheme = {
     lightGray1: '#f7f8fc',
     lightGray2: '#DFE0EB',
     lightGray3: '#c5c7cd',
+    lightGray4:'#BDBDBD',
     green: '#27AE60',
-    mediumGray: '#7A7E99',
+    mediumGray1: '#7A7E99',
+    mediumGray2:'#a4a6b3',
     high:'#EB5757',
     normal:'#29CC97',
-    low:'#F2C94C'
+    low:'#F2C94C',
+    bgNav:'#363740',
+    activeNavFont:'#dde2ff',
+    activeNavBg:'f7f8f9',
   },
   media: {
     extraLarge: '(max-width: 1440px)',

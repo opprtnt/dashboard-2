@@ -4,9 +4,9 @@ import Loader from '../components/Loader';
 import TotalBar from '../components/TotalBar';
 import { useDispatch } from 'react-redux';
 import { setTitlePage } from '../store/appSlice';
-import { DashboardCard } from '../style/style';
 import { useAppSelector } from '../store';
 import { ContextLogin } from '..';
+import styled from 'styled-components';
 
 type setCount = React.Dispatch<React.SetStateAction<number | undefined>>;
 
@@ -86,20 +86,20 @@ if(countHigh===undefined||countLow===undefined||countNormal===undefined||countHi
     <div className="container">
       <div className="container__content">
         <div className="row">
-          <DashboardCard className="white">
-            <h3 className="gray">Total High</h3>
+          <DashboardCard>
+            <h3>Total High</h3>
             <div className="count">{countHigh}</div>
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Total Normal</h3>
+          <DashboardCard>
+            <h3>Total Normal</h3>
             <div className="count">{countNormal}</div>
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Total Low</h3>
+          <DashboardCard>
+            <h3>Total Low</h3>
             <div className="count">{countLow}</div>
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Total Uncompleted</h3>
+          <DashboardCard>
+            <h3>Total Uncompleted</h3>
             <div className="count">
               {countNormal + countLow + countHigh}
               {Number.isFinite(totalUncompletedPrecent)&&<span className="precent">{totalUncompletedPrecent}%</span>}
@@ -108,20 +108,20 @@ if(countHigh===undefined||countLow===undefined||countNormal===undefined||countHi
         </div>
         <TotalBar/>
         <div className="row">
-          <DashboardCard className="white">
-            <h3 className="gray">High</h3>
+          <DashboardCard>
+            <h3>High</h3>
             {countHighUser}
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Normal</h3>
+          <DashboardCard>
+            <h3>Normal</h3>
             {countNormalUser}
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Low</h3>
+          <DashboardCard>
+            <h3>Low</h3>
             {countLowUser}
           </DashboardCard>
-          <DashboardCard className="white">
-            <h3 className="gray">Total Uncompleted</h3>
+          <DashboardCard>
+            <h3>Total Uncompleted</h3>
             <div className="count">
               {countNormalUser + countLowUser + countHighUser}
               {Number.isFinite(totalUncompletedUserPrecent) && <span className="precent">{totalUncompletedUserPrecent}%</span>}
@@ -132,5 +132,26 @@ if(countHigh===undefined||countLow===undefined||countNormal===undefined||countHi
     </div>
   );
 };
-
+export const DashboardCard = styled.div`
+  width: 258px;
+  text-align: center;
+  padding: 24px 32px;
+  background-color: ${({theme})=>theme.colors.contentBg};
+  border: 1px solid ${({theme})=>theme.colors.border};
+  border-radius: 8px;
+  font-size: 40px;
+  font-weight: 700;
+  h3 {
+    font-size: 19px;
+    color: ${({theme})=>theme.colors.headColor};
+    margin-bottom: 12px;
+  }
+  .precent {
+    font-size: 24px;
+    margin-left: 10px;
+  }
+  & + & {
+    margin-left: 30px;
+  }
+`;
 export default Dashboard;

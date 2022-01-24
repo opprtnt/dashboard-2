@@ -8,11 +8,12 @@ import { changeViewTable } from '../store/appSlice';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../store';
 import React from 'react';
-import { Button } from '../style/style';
+import styled, { useTheme } from 'styled-components';
 
 export default function ToolbarS() {
   const dispatch = useDispatch();
   const viewTable = useAppSelector((state) => state.user.viewTable);
+  const theme = useTheme();
 
   const onChangeViewTable = (v: boolean) => {
     dispatch(changeViewTable(v));
@@ -29,15 +30,19 @@ export default function ToolbarS() {
       <div>
         <Tooltip title="Grid view">
           <IconButton onClick={() => onChangeViewTable(false)}>
-            <GridViewRoundedIcon sx={{ color: viewTable ? '#BDBDBD' : '#27AE60' }} />
+            <GridViewRoundedIcon sx={{ color: viewTable ? theme.colors.lightGray4 : theme.colors.green }} />
           </IconButton>
         </Tooltip>
         <Tooltip title="Column view">
           <IconButton onClick={() => onChangeViewTable(true)}>
-            <ViewAgendaRoundedIcon sx={{ color: viewTable ? '#27AE60' : '#BDBDBD' }} />
+            <ViewAgendaRoundedIcon sx={{ color: viewTable ? theme.colors.green : theme.colors.lightGray4 }} />
           </IconButton>
         </Tooltip>
       </div>
     </Toolbar>
   );
 }
+
+ const Button = styled.button`
+  margin-left: 32px;
+`;

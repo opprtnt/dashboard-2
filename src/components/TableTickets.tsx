@@ -23,15 +23,13 @@ import { useAppSelector } from '../store';
 import { ContextLogin } from '..';
 import { useTheme } from 'styled-components';
 
-const TableDashboard: FC = () => {
+const TableTickets: FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [page, setPage] = useState(0);
   const viewTable = useAppSelector((state) => state.user.viewTable);
   const {db} = useContext(ContextLogin)
   const [lastVisible, setLastVisible] = useState<DocumentSnapshot>();
   const [lastVisiblePrev, setLastVisiblePrev] = useState<DocumentSnapshot>();
-  const [lastVisibleSearch, setLastVisibleSearch] = useState<DocumentSnapshot>();
-  const [lastVisiblePrevSearch, setLastVisiblePrevSearch] = useState<DocumentSnapshot>();
   const data = useAppSelector((state) => state.user.data);
   const [lastPage, setLastPage] = useState(0);
   const [dataLength, setDataLength] = useState(0);
@@ -54,9 +52,32 @@ const TableDashboard: FC = () => {
   //query for table data
   useEffect(() => {
     async function getTableData() {
-      if (searchItem) return;
       let q = query(collection(db, 'tickets'));
-      if (page === lastPage) {
+      if (searchItem){
+        if ( page === lastPage) {
+          setPage(0);
+          q = query(
+            collection(db, 'tickets'),
+            where('title', '>=', searchItem),
+            where('title', '<=', searchItem + 'я'),
+            orderBy('title', 'desc'),
+            limit(rowsPerPage)
+          );
+          setLastPage(0);
+        }
+        else  {
+          q = query(
+            collection(db, 'tickets'),
+            where('title', '>=', searchItem),
+            where('title', '<=', searchItem + 'я'),
+            orderBy('title', 'desc'),
+            ((page > lastPage) ? startAfter(lastVisible) : endBefore(lastVisiblePrev)),
+            (page > lastPage) ? limit(rowsPerPage) : limitToLast(rowsPerPage)
+          );
+          setLastPage(page);
+        }
+      }
+      else if (page === lastPage) {
         setPage(0)
         q = query(
           collection(db, 'tickets'),
@@ -96,42 +117,13 @@ const TableDashboard: FC = () => {
           where('title', '>=', searchItem),
           where('title', '<=', searchItem + 'я')
         );
-        const documentSnapshots1 = await getDocs(qLength);
-        setDataLength(documentSnapshots1.docs.length);
-        let q = query(collection(db, 'tickets'));
-        if ( page === lastPage) {
-          setPage(0);
-          q = query(
-            collection(db, 'tickets'),
-            where('title', '>=', searchItem),
-            where('title', '<=', searchItem + 'я'),
-            limit(rowsPerPage)
-          );
-          setLastPage(0);
-        }
-        else  {
-          q = query(
-            collection(db, 'tickets'),
-            where('title', '>=', searchItem),
-            where('title', '<=', searchItem + 'я'),
-            ((page > lastPage) ? startAfter(lastVisibleSearch) : endBefore(lastVisiblePrevSearch)),
-            (page > lastPage) ? limit(rowsPerPage) :limitToLast(rowsPerPage)
-          );
-          setLastPage(page);
-        }
-        const documentSnapshots = await getDocs(q);
-        let arr:any = [];
-        setLastVisibleSearch(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-        setLastVisiblePrevSearch(documentSnapshots.docs[0]);
-        documentSnapshots.forEach((doc) => {
-          arr.push(Object.assign(JSON.parse(JSON.stringify(doc.data())), { id: doc.id }));
-        });
-        dispatch(setData(arr));
+        const documentSnapshots = await getDocs(qLength);
+        setDataLength(documentSnapshots.docs.length);
       }
       filterSearch();
     }
     
-  , [searchItem, page,rowsPerPage, sort, db, dispatch]);
+  , [searchItem, db]);
 
   const handleChangePage = (event:MouseEvent<HTMLButtonElement, globalThis.MouseEvent> | null, newPage:number) => {
     setPage(newPage);
@@ -165,4 +157,4 @@ const TableDashboard: FC = () => {
   );
 };
 
-export default TableDashboard;
+export default TableTickets;

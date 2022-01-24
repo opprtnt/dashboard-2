@@ -1,8 +1,8 @@
 import React, { useEffect, FC } from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import TicketForm from '../components/TicketForm';
 import { setTitlePage } from '../store/appSlice';
-import { NewTicketForm } from '../style/style';
 
 const NewTicketPage: FC = () => {
   const dispatch = useDispatch();
@@ -22,4 +22,12 @@ const NewTicketPage: FC = () => {
     </div>
   );
 };
+
+const NewTicketForm = styled.div`
+  padding: 32px;
+  border-radius: 8px;
+  h3 {
+    margin-bottom: 36px;
+  }
+`;
 export default NewTicketPage;

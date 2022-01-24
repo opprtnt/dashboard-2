@@ -1,19 +1,22 @@
 import DoneIcon from '@mui/icons-material/Done';
 import { Close } from '@mui/icons-material';
-import React, { MouseEvent, useState, FC } from 'react';
+import React, { MouseEvent, useState, FC, useContext } from 'react';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteDoc, doc, getFirestore, increment, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, increment, updateDoc } from 'firebase/firestore';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAppSelector } from '../store';
 import { DeleteButtonProps } from '../interface';
+import { useTheme } from 'styled-components';
+import { ContextLogin } from '..';
 
 const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }) => {
   const [acceptDelete, changeAcceptDelete] = useState(false);
-  const db = getFirestore();
+  const { db } = useContext(ContextLogin);
   const docRef = doc(db, 'tickets', id);
   const user = useAppSelector((state) => state.user.userData);
   const docCount = doc(db, 'count', 'count');
+  const theme = useTheme();
 
   const showDeleteTicket = (e: MouseEvent) => {
     e.stopPropagation();
@@ -40,10 +43,10 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
       {acceptDelete && (
         <>
           <IconButton onClick={(e) => deleteTicket(e)}>
-            <DoneIcon sx={{ color: '#219653' }} />
+            <DoneIcon sx={{ color: theme.colors.normal }} />
           </IconButton>
           <IconButton onClick={(e) => showDeleteTicket(e)}>
-            <Close sx={{ color: '#EB5757' }} />
+            <Close sx={{ color: theme.colors.high }} />
           </IconButton>
         </>
       )}

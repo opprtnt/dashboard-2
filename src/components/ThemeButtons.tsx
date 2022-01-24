@@ -26,7 +26,7 @@ const ThemeButtons: React.FC = () => {
 };
 const ThemeButton = styled.div`
   display: flex;
-  border-right: 1px solid #dfe0eb;
+  border-right: 1px solid ${({ theme }) => theme.colors.border};
   padding: 0 32px;
 `;
 

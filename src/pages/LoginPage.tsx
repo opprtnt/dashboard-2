@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  background-color: #363740;
+  background-color: ${({ theme }) => theme.colors.bgNav};
   align-items: center;
 `;
 

@@ -61,13 +61,13 @@ const Nav = styled.nav`
   height: 100%;
   width: 255px;
   padding-top: 32px;
-  color: #a4a6b3;
-  background-color: #363740;
+  color: ${({ theme }) => theme.colors.mediumGray2};
+  background-color: ${({ theme }) => theme.colors.bgNav};
   @media ${({ theme }) => theme.media.large} {
     width: 76px;
   }
   svg {
-    fill: #a4a6b3;
+    fill: ${({ theme }) => theme.colors.mediumGray2};
   }
 `;
 
@@ -107,19 +107,19 @@ const NavItem = styled.li`
     }
   }
   .active {
-    background-color: rgba(159, 162, 180, 0.08);
+    background-color: ${({ theme }) => theme.colors.activeNavBg};
     padding-left: 29px;
-    color: #dde2ff;
-    border-left: 3px solid #dde2ff;
+    color: ${({ theme }) => theme.colors.activeNavFont};
+    border-left: 3px solid ${({ theme }) => theme.colors.activeNavFont};
     svg {
-      fill: #dde2ff;
+      fill: ${({ theme }) => theme.colors.activeNavFont};
     }
     @media ${({ theme }) => theme.media.large} {
       padding-left: 0;
     }
   }
   &:hover {
-    background-color: rgba(159, 162, 180, 0.08);
+    background-color: ${({ theme }) => theme.colors.activeNavBg};
   }
 `;
 
