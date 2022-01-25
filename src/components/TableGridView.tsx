@@ -16,7 +16,7 @@ const TableGridView: FC<ITableView> = ({ data }) => {
   return (
     <Stack direction="row" sx={{ flexWrap: 'wrap', margin: '40px 24px 32px' }}>
       {data.map((ticket) => (
-        <TicketCard key={ticket.id} ticketData={ticket} />
+        <TicketCard key={ticket.id} ticketData={ticket}/>
       ))}
     </Stack>
   );

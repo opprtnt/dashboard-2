@@ -34,9 +34,10 @@ const TableTickets: FC = () => {
   const [lastPage, setLastPage] = useState(0);
   const [dataLength, setDataLength] = useState(0);
   const dispatch = useDispatch();
-  const sort = useAppSelector<any>((state) => state.user.sortTable);
+  const sort = useAppSelector((state) => state.user.sortTable);
   const sortOrderBy = useAppSelector((state) => state.user.orderBy);
   const searchItem = useAppSelector((state) => state.user.filter);
+  const stateTableUpdate = useAppSelector(state=>state.user.stateTable)
   const theme = useTheme();
   //set size collection
   useEffect(() => {
@@ -106,7 +107,7 @@ const TableTickets: FC = () => {
         } 
           getTableData();
         }
-  , [page,rowsPerPage, sort, db, searchItem, dispatch, sortOrderBy]);
+  , [page,rowsPerPage, sort, db, searchItem, dispatch, sortOrderBy, stateTableUpdate]);
 
   useEffect(() => {
     async function filterSearch() {
@@ -134,7 +135,7 @@ const TableTickets: FC = () => {
     setLastPage(0);
   };
 
-  if (!data) return <Loader />;
+  if (data.length===0 && !searchItem) return <Loader />;
   return (
       <TableContainer
         className="white"

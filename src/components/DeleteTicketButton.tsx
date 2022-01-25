@@ -9,6 +9,8 @@ import { useAppSelector } from '../store';
 import { DeleteButtonProps } from '../interface';
 import { useTheme } from 'styled-components';
 import { ContextLogin } from '..';
+import { useDispatch } from 'react-redux';
+import { updateTable } from '../store/appSlice';
 
 const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }) => {
   const [acceptDelete, changeAcceptDelete] = useState(false);
@@ -17,6 +19,8 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
   const user = useAppSelector((state) => state.user.userData);
   const docCount = doc(db, 'count', 'count');
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const updateTableState = useAppSelector((state) => state.user.stateTable);
 
   const showDeleteTicket = (e: MouseEvent) => {
     e.stopPropagation();
@@ -31,6 +35,7 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
       count: increment(-1),
     });
     toast.success('Delete successfully');
+    dispatch(updateTable(!updateTableState));
   };
 
   return (

@@ -151,7 +151,7 @@ const TableCellTitle = styled.p`
   font-weight: 600;
 `;
 const TableCellSubtitle = styled.p`
-  color: ${({theme})=>theme.colors.lightGray3};
+  color: ${({ theme }) => theme.colors.lightGray3};
   margin-top: 4px;
   font-size: 12px;
 `;

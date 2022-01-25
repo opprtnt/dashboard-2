@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { OrderByDirection } from 'firebase/firestore';
+import { IDataTable } from '../interface';
 
 export interface RootState {}
 const authSlice = createSlice({
   name: 'user',
   initialState: {
-    auth: null,
     userData: { uid: '', displayName: '', photoURL: '' },
-    data: null,
+    data: [] as IDataTable[],
     viewTable: true,
     titlePage: 'Title',
     themeDark: false,
-    sortTable: 'desc',
+    sortTable: 'desc' as OrderByDirection,
     orderBy: 'date',
     filter: '',
+    stateTable: false
   },
   reducers: {
     initCurrentUser(state, action) {
@@ -23,9 +25,6 @@ const authSlice = createSlice({
     },
     changeViewTable(state, action) {
       state.viewTable = action.payload;
-    },
-    initAuth(state, action) {
-      state.auth = action.payload;
     },
     setTitlePage(state, action) {
       state.titlePage = action.payload;
@@ -42,18 +41,21 @@ const authSlice = createSlice({
     setFilter(state, action) {
       state.filter = action.payload;
     },
+    updateTable(state, action) {
+      state.stateTable = action.payload;
+    },
   },
 });
 export const {
   initCurrentUser,
   setData,
   changeViewTable,
-  initAuth,
   setTitlePage,
   toggleThemeDark,
   setSortTable,
   setOrderBy,
   setFilter,
+  updateTable
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,16 +1,5 @@
 export interface ITableView {
-  data: [
-    {
-      user: { uid: string, photo: string, displayName: string },
-      title: string,
-      completed: boolean,
-      id: string,
-      date: {
-        seconds: number,
-      },
-      priority: number,
-    }
-  ];
+  data: IDataTable[];
 }
 
 export interface IDataForm {
@@ -23,6 +12,21 @@ export interface DeleteButtonProps {
   rowUserUid: string;
   id: string;
   completed: boolean;
+}
+
+export interface IDataTable {
+  user: {
+    uid: string,
+    photo: string,
+    displayName: string,
+  };
+  title: string;
+  completed: boolean;
+  id: string;
+  date: {
+    seconds: number,
+  };
+  priority: number;
 }
 
 export interface TicketCardProps {
