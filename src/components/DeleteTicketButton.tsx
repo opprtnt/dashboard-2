@@ -21,6 +21,7 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
   const theme = useTheme();
   const dispatch = useDispatch();
   const updateTableState = useAppSelector((state) => state.user.stateTable);
+  const [deleteStatus, setDeleteStatus] = useState(false);
 
   const showDeleteTicket = (e: MouseEvent) => {
     e.stopPropagation();
@@ -29,12 +30,15 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
 
   const deleteTicket = async (e: MouseEvent) => {
     e.stopPropagation();
+    setDeleteStatus(true);
     await deleteDoc(docRef);
     changeAcceptDelete((prev) => !prev);
     await updateDoc(docCount, {
       count: increment(-1),
     });
-    toast.success('Delete successfully');
+    toast.success('Delete successfully', {
+      id: 'clipboard',
+    });
     dispatch(updateTable(!updateTableState));
   };
 
@@ -55,7 +59,7 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
           </IconButton>
         </>
       )}
-      <Toaster position="top-right" reverseOrder={false} />
+      {deleteStatus && <Toaster position="top-right" reverseOrder={false} />}
     </>
   );
 };

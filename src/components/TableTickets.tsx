@@ -107,6 +107,7 @@ const TableTickets: FC = () => {
         } 
           getTableData();
         }
+        // eslint-disable-next-line
   , [page,rowsPerPage, sort, db, searchItem, dispatch, sortOrderBy, stateTableUpdate]);
 
   useEffect(() => {
