@@ -4,7 +4,7 @@ import React, { MouseEvent, useState, FC, useContext } from 'react';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDoc, doc, increment, updateDoc } from 'firebase/firestore';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useAppSelector } from '../store';
 import { DeleteButtonProps } from '../interface';
 import { useTheme } from 'styled-components';
@@ -21,7 +21,6 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
   const theme = useTheme();
   const dispatch = useDispatch();
   const updateTableState = useAppSelector((state) => state.user.stateTable);
-  const [deleteStatus, setDeleteStatus] = useState(false);
 
   const showDeleteTicket = (e: MouseEvent) => {
     e.stopPropagation();
@@ -30,7 +29,6 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
 
   const deleteTicket = async (e: MouseEvent) => {
     e.stopPropagation();
-    setDeleteStatus(true);
     await deleteDoc(docRef);
     changeAcceptDelete((prev) => !prev);
     await updateDoc(docCount, {
@@ -59,7 +57,6 @@ const DeleteTicketButton: FC<DeleteButtonProps> = ({ rowUserUid, id, completed }
           </IconButton>
         </>
       )}
-      {deleteStatus && <Toaster position="top-right" reverseOrder={false} />}
     </>
   );
 };
