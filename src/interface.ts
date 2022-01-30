@@ -56,6 +56,7 @@ export interface ITheme {
     lightGray2: string,
     lightGray3: string,
     lightGray4: string,
+    darkGray: string,
     green: string,
     mediumGray1: string,
     mediumGray2: string,

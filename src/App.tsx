@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { ThemeProvider as ThemeProviderMui, createTheme } from '@mui/material/styles';
 import React, { FC, useContext, useEffect } from 'react';
-import { initCurrentUser } from './store/appSlice';
+import { changeViewTable, initCurrentUser, toggleThemeDark } from './store/appSlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ContextLogin } from './index';
 import { routes } from './routes';
@@ -28,6 +28,14 @@ const App: FC = () => {
       },
     },
   });
+  // get local storage items for store
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    const viewTable = localStorage.getItem('viewTable');
+
+    dispatch(toggleThemeDark(theme === 'dark'));
+    dispatch(changeViewTable(viewTable === 'column'));
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) dispatch(initCurrentUser(JSON.parse(JSON.stringify(user))));

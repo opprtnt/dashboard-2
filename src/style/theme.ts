@@ -14,6 +14,7 @@ export const baseTheme = {
     green: '#27AE60',
     mediumGray1: '#7A7E99',
     mediumGray2:'#a4a6b3',
+    darkGray:'#4F4F4F',
     high:'#EB5757',
     normal:'#29CC97',
     low:'#F2C94C',

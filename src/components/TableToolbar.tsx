@@ -17,6 +17,7 @@ export default function ToolbarS() {
 
   const onChangeViewTable = (v: boolean) => {
     dispatch(changeViewTable(v));
+    localStorage.setItem('viewTable', v ? 'column' : 'grid');
   };
 
   return (
@@ -43,6 +44,6 @@ export default function ToolbarS() {
   );
 }
 
- const Button = styled.button`
+const Button = styled.button`
   margin-left: 32px;
 `;
