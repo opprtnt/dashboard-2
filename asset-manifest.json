@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/dashboard-2/static/css/main.b6667f0f.css",
+    "main.js": "/dashboard-2/static/js/main.ca68ecd8.js",
+    "static/media/Inter-Regular.ttf": "/dashboard-2/static/media/Inter-Regular.2391725004ae05a27e8e.ttf",
+    "static/media/Mulish-Bold.ttf": "/dashboard-2/static/media/Mulish-Bold.14efde3cf96011d61f01.ttf",
+    "static/media/Mulish-Regular.ttf": "/dashboard-2/static/media/Mulish-Regular.18a0df44f5ffb1a651c6.ttf",
+    "static/media/Mulish-SemiBold.ttf": "/dashboard-2/static/media/Mulish-SemiBold.b7a7ba116cfe02e9990f.ttf",
+    "index.html": "/dashboard-2/index.html",
+    "main.b6667f0f.css.map": "/dashboard-2/static/css/main.b6667f0f.css.map",
+    "main.ca68ecd8.js.map": "/dashboard-2/static/js/main.ca68ecd8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b6667f0f.css",
+    "static/js/main.ca68ecd8.js"
+  ]
+}
