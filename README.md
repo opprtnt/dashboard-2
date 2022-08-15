@@ -1,7 +1,7 @@
 <b>О приложении</b><br>
 В приложении можно авторизироваться в системе через Google аккаунт. На вкладке Tickets отображаются все имеющиеся задачи списком, поддерживающим пагинацию. Можно менять количество отображаемых задач в списке и их вид со списка на карточки. Задачи можно: создать, удалить по нажатию на урну, сортировать по дате и приоритету, искать по имени. По клику можно перейти на страницу задачи. На странице задачи можно отредактировать все поля, перевести ее в статус "Выполнено" или удалить, если вы автор этой задачи. На вкладке Dashboard есть общая и личная статистика по задачам, а так же график. Приложение поддерживает темную тему.<br>
 <b>Стек</b><br>
-React, Redux, Styled components, React router, MUI, Typescript, react hook form. Для аторизации и храниния данных используется Firebase. 
+React, Redux, Styled components, React router, MUI, Typescript, react hook form. Для аторизации и храниния данных используется Firebase.<br>
 <b>Примеры приложения</b><br>
  Страница входа
  ![image](https://user-images.githubusercontent.com/40352987/184659624-48be54f0-d66f-4039-b6ae-cfb786b0cbbd.png)
@@ -10,4 +10,6 @@ React, Redux, Styled components, React router, MUI, Typescript, react hook form.
 Создание тикета ![image](https://user-images.githubusercontent.com/40352987/184659979-c3fe3703-d024-44d2-a978-f04b05b85a1f.png)
 Редактирование тикета ![image](https://user-images.githubusercontent.com/40352987/184660154-6898e9c4-8b33-4237-a3b4-af2a4b68d2ae.png)
 Темная тема и вид карточки ![image](https://user-images.githubusercontent.com/40352987/184660326-a48edc9e-2a7e-49d5-8b72-0ee5a4779986.png)
+<b>P.S</b><br>
+В приложении нет Middleware для сайд эффектов и не очень хорошо разбит код, над этим я уже поработала в других тестовых проетах. Пример: https://github.com/opprtnt/table. Но как говорится: Нет предела совершенству.
 
